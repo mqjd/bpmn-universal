@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.mqjd</groupId>
+  <artifactId>bpmn-universal</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <modules>
+    <module>bpmn-flink</module>
+  </modules>
+
+  <name>bpmn-universal</name>
+  <url>https://mqjd.github.io/</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <flink.version>1.14.4</flink.version>
+    <kafka.version>3.1.0</kafka.version>
+    <hadoop.version>3.3.2</hadoop.version>
+    <yarn.version>3.3.2</yarn.version>
+    <hdfs.version>3.3.2</hdfs.version>
+    <hbase.version>2.4.10</hbase.version>
+    <elasticsearch.version>8.1.0</elasticsearch.version>
+    <junit.version>4.11</junit.version>
+    <commons.lang3.version>3.12.0</commons.lang3.version>
+    <guava.version>31.1-jre</guava.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.11</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+  </dependencies>
+
+</project>
