@@ -11,7 +11,11 @@
 
     <artifactId>bpmn-datamodel</artifactId>
 
-    <properties>
-    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>com.networknt</groupId>
+            <artifactId>json-schema-validator</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

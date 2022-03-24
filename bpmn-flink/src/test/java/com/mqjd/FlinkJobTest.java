@@ -27,6 +27,7 @@ public class FlinkJobTest {
   static {
     configuration.set(CoreOptions.DEFAULT_PARALLELISM, 1);
     configuration.set(TaskManagerOptions.TOTAL_PROCESS_MEMORY, MemorySize.parse("1gb"));
+    configuration.set(RestOptions.ENABLE_FLAMEGRAPH, true);
   }
 
   @ClassRule
