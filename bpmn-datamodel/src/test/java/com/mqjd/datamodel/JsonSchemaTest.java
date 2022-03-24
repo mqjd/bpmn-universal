@@ -1,4 +1,4 @@
-package com.mqjd;
+package com.mqjd.datamodel;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

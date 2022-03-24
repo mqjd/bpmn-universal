@@ -1,0 +1,16 @@
+{
+  "id": "string1",
+  "type": "string",
+  "title": "test_string",
+  "description": "test string field description",
+  "minLength": 1,
+  "maxLength": 10,
+  "pattern": "[0-9]+",
+  "format": "date",
+  "enum": [
+    "street_address",
+    "city",
+    "state",
+    "type"
+  ]
+}
