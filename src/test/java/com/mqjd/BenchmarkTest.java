@@ -19,46 +19,44 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 10) // 进行10轮测试
 public class BenchmarkTest {
 
-  public static void main(String[] args) throws RunnerException {
-    Options options = new OptionsBuilder().include(BenchmarkTest.class.getSimpleName()).build();
-    new Runner(options).run();
-  }
-
-  @Param({"10", "40", "70", "100"}) // 定义四个参数，之后会分别对这四个参数进行测试
-  private int n;
-
-  private List<Integer> array;
-  private List<Integer> list;
-
-  @Setup(Level.Trial) // 初始化方法，在全部Benchmark运行之前进行
-  public void init() {
-    array = new ArrayList<>(0);
-    list = new LinkedList<>();
-    for (int i = 0; i < n; i++) {
-      array.add(i);
-      list.add(i);
+    public static void main(String[] args) throws RunnerException {
+        Options options = new OptionsBuilder().include(BenchmarkTest.class.getSimpleName()).build();
+        new Runner(options).run();
     }
-  }
 
-  @Benchmark
-  public void arrayTraverse() {
-    for (int i = 0; i < n; i++) {
-      array.get(i);
-    }
-  }
+    @Param({"10", "40", "70", "100"}) // 定义四个参数，之后会分别对这四个参数进行测试
+    private int n;
 
-  @Benchmark
-  public void listTraverse() {
-    for (int i = 0; i < n; i++) {
-      list.get(i);
-    }
-  }
+    private final List<Integer> array = new ArrayList<>();
+    private final List<Integer> list = new LinkedList<>();
 
-  @TearDown(Level.Trial) // 结束方法，在全部Benchmark运行之后进行
-  public void arrayRemove() {
-    for (int i = 0; i < n; i++) {
-      array.remove(0);
-      list.remove(0);
+    @Setup(Level.Trial) // 初始化方法，在全部Benchmark运行之前进行
+    public void init() {
+        for (int i = 0; i < n; i++) {
+            array.add(i);
+            list.add(i);
+        }
     }
-  }
+
+    @Benchmark
+    public void arrayTraverse() {
+        for (int i = 0; i < n; i++) {
+            array.get(i);
+        }
+    }
+
+    @Benchmark
+    public void listTraverse() {
+        for (int i = 0; i < n; i++) {
+            list.get(i);
+        }
+    }
+
+    @TearDown(Level.Trial) // 结束方法，在全部Benchmark运行之后进行
+    public void arrayRemove() {
+        for (int i = 0; i < n; i++) {
+            array.remove(0);
+            list.remove(0);
+        }
+    }
 }

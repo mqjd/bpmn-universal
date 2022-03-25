@@ -1,5 +1,5 @@
 {
-  "id": "string1",
+  "$id": "string1",
   "type": "string",
   "title": "test_string",
   "description": "test string field description",

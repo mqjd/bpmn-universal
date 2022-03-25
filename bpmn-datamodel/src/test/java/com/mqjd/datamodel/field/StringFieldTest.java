@@ -1,20 +1,18 @@
 package com.mqjd.datamodel.field;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mqjd.datamodel.utils.JsonUtils;
 import org.junit.Test;
-
-import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
 public class StringFieldTest {
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     @Test
-    public void fromJson() throws IOException {
-        StringField objectField =
-                OBJECT_MAPPER.readValue(
+    public void fromJson() {
+        StringField stringField =
+                JsonUtils.fromJson(
                         getClass().getResourceAsStream("/field/string1.json"), StringField.class);
-        assertEquals("test_string", objectField.getTitle());
+        assertEquals("test_string", stringField.getTitle());
+        System.out.println(JsonUtils.toJson(stringField));
     }
 }

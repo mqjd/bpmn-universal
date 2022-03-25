@@ -1,6 +1,11 @@
 {
   "type": "object",
   "title": "test_object",
+  "additionalProperties": {
+    "type": "string",
+    "title": "test_string",
+    "description": "test string field description"
+  },
   "properties": {
     "street_address": {
       "type": "string"
