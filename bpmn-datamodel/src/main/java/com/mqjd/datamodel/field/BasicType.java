@@ -1,11 +1,11 @@
 package com.mqjd.datamodel.field;
 
+import java.util.Locale;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.mqjd.datamodel.field.array.ArrayField;
 import com.mqjd.datamodel.field.object.ObjectField;
-
-import java.util.Locale;
 
 public enum BasicType {
     STRING(StringField.class),

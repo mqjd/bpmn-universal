@@ -1,6 +1,9 @@
 package com.mqjd.datamodel.field;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.mqjd.datamodel.field.array.ArrayField;
 import com.mqjd.datamodel.field.object.ObjectField;
 
@@ -19,7 +22,6 @@ import java.util.Objects;
     @JsonSubTypes.Type(value = BasicField.class, name = "any"),
     @JsonSubTypes.Type(value = NullField.class, name = "null")
 })
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BasicField {
     @JsonProperty("$id")
     private String id;
