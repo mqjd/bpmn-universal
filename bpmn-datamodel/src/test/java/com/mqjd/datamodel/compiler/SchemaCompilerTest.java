@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.StringWriter;
 import java.util.Objects;
 
-public class SchemaCompiler {
+public class SchemaCompilerTest {
     @Test
     public void testJanino() throws Exception {
         String content = "System.out.println(\"Hello world\");";
@@ -35,6 +35,7 @@ public class SchemaCompiler {
         SimpleCompiler compiler = new SimpleCompiler();
         compiler.setParentClassLoader(this.getClass().getClassLoader());
         compiler.cook(stringWriter.toString());
+        //noinspection unchecked
         Class<Runner> aClass =
                 (Class<Runner>) compiler.getClassLoader().loadClass(packageName + "." + className);
         aClass.newInstance().run();
