@@ -1,12 +1,14 @@
 package com.mqjd.datamodel.model;
 
 import com.mqjd.datamodel.field.BasicField;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
 public class PojoConfig {
     private List<String> imports;
     private String className;
+    private String packageName;
     private List<BasicField> fields;
 
     public List<String> getImports() {
@@ -21,8 +23,23 @@ public class PojoConfig {
         return className;
     }
 
+    public String getFullClassName() {
+        if (StringUtils.isNotBlank(getPackageName())) {
+            return packageName + "." + className;
+        }
+        return className;
+    }
+
     public void setClassName(String className) {
         this.className = className;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
     }
 
     public List<BasicField> getFields() {

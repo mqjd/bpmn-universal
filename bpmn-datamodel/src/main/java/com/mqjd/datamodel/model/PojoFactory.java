@@ -28,9 +28,9 @@ public class PojoFactory {
         }
         try {
             //noinspection unchecked
-            return (Class<T>) compiler.getClassLoader().loadClass(config.getClassName());
+            return (Class<T>) compiler.getClassLoader().loadClass(config.getFullClassName());
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Can not load class " + config.getClassName(), e);
+            throw new RuntimeException("Can not load class " + config.getFullClassName(), e);
         }
     }
 
