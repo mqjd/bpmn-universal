@@ -6,7 +6,7 @@ import ${import};
 
 public class ${className} {
 
-    <#list fields as field>
+    <#list schema.fields as field>
     private ${field.type} ${field.title};
     </#list>
 

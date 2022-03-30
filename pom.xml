@@ -31,7 +31,6 @@
         <hbase.version>2.4.10</hbase.version>
         <elasticsearch.version>8.1.0</elasticsearch.version>
         <junit.version>4.11</junit.version>
-        <commons.lang3.version>3.12.0</commons.lang3.version>
         <guava.version>31.1-jre</guava.version>
         <slf4j.version>1.7.36</slf4j.version>
         <log4j2.version>2.17.2</log4j2.version>
@@ -39,6 +38,8 @@
         <json-schema.version>1.0.67</json-schema.version>
         <freemarker.version>2.3.31</freemarker.version>
         <janino.version>3.1.6</janino.version>
+        <commons-lang3.version>3.12.0</commons-lang3.version>
+        <jackson.version>2.13.2.2</jackson.version>
     </properties>
 
     <dependencyManagement>
@@ -62,6 +63,7 @@
                 <groupId>com.networknt</groupId>
                 <artifactId>json-schema-validator</artifactId>
                 <version>${json-schema.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
@@ -82,6 +84,16 @@
                 <groupId>org.codehaus.janino</groupId>
                 <artifactId>janino</artifactId>
                 <version>${janino.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>

@@ -11,7 +11,7 @@ import java.util.Objects;
 public class ArrayField extends BasicField {
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
     @JsonTypeResolver(ItemsTypeResolver.class)
-    private Object items;
+    private BasicField items;
 
     private BasicField contains;
     private Integer minContains;
@@ -27,11 +27,11 @@ public class ArrayField extends BasicField {
         return BasicType.ARRAY;
     }
 
-    public Object getItems() {
+    public BasicField getItems() {
         return items;
     }
 
-    public void setItems(Object items) {
+    public void setItems(BasicField items) {
         this.items = items;
     }
 

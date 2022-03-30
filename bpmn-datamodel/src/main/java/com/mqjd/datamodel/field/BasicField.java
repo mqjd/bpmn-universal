@@ -4,12 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 import com.mqjd.datamodel.field.array.ArrayField;
 import com.mqjd.datamodel.field.object.ObjectField;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
 @JsonSubTypes({
@@ -23,8 +24,6 @@ import java.util.Objects;
     @JsonSubTypes.Type(value = NullField.class, name = "null")
 })
 public class BasicField {
-    @JsonProperty("$id")
-    private String id;
 
     @JsonProperty("$defs")
     private Map<String, BasicField> defs;
@@ -42,14 +41,6 @@ public class BasicField {
 
     public void setType(BasicType type) {
         this.type = type;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public Map<String, BasicField> getDefs() {
@@ -118,32 +109,41 @@ public class BasicField {
 
     @JsonIgnore
     public BasicType getType() {
-        return type == null ? BasicType.ANY : type;
+        Set<BasicType> basicTypes =
+                Sets.newHashSet(
+                        Iterables.concat(
+                                collectTypes(allOf), collectTypes(anyOf), collectTypes(oneOf)));
+        return basicTypes.size() == 1 ? basicTypes.stream().findFirst().get() : BasicType.ANY;
+    }
+
+    public Set<BasicType> collectTypes(BasicField[] fields) {
+        return Optional.ofNullable(fields)
+                .map(v -> Arrays.stream(v).map(BasicField::getType).collect(Collectors.toSet()))
+                .orElse(Collections.emptySet());
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof BasicField)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         BasicField that = (BasicField) o;
-        return Objects.equals(getId(), that.getId())
-                && Objects.equals(getDefs(), that.getDefs())
-                && Objects.equals(getRef(), that.getRef())
-                && Objects.equals(getTitle(), that.getTitle())
-                && Objects.equals(getDescription(), that.getDescription())
-                && Arrays.equals(getAllOf(), that.getAllOf())
-                && Arrays.equals(getAnyOf(), that.getAnyOf())
-                && Arrays.equals(getOneOf(), that.getOneOf())
-                && Objects.equals(getNot(), that.getNot());
+        return Objects.equals(defs, that.defs)
+                && Objects.equals(ref, that.ref)
+                && Objects.equals(title, that.title)
+                && Objects.equals(description, that.description)
+                && Arrays.equals(allOf, that.allOf)
+                && Arrays.equals(anyOf, that.anyOf)
+                && Arrays.equals(oneOf, that.oneOf)
+                && Objects.equals(not, that.not)
+                && type == that.type;
     }
 
     @Override
     public int hashCode() {
-        int result =
-                Objects.hash(getId(), getDefs(), getRef(), getTitle(), getDescription(), getNot());
-        result = 31 * result + Arrays.hashCode(getAllOf());
-        result = 31 * result + Arrays.hashCode(getAnyOf());
-        result = 31 * result + Arrays.hashCode(getOneOf());
+        int result = Objects.hash(defs, ref, title, description, not, type);
+        result = 31 * result + Arrays.hashCode(allOf);
+        result = 31 * result + Arrays.hashCode(anyOf);
+        result = 31 * result + Arrays.hashCode(oneOf);
         return result;
     }
 }

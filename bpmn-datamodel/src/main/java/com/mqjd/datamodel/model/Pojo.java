@@ -1,15 +1,12 @@
 package com.mqjd.datamodel.model;
 
-import com.mqjd.datamodel.schema.Schema;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.List;
 
-public class PojoConfig {
+public class Pojo extends Field {
     private List<String> imports;
     private String className;
     private String packageName;
-    private Schema schema;
+    private List<Field> fields;
 
     public List<String> getImports() {
         return imports;
@@ -20,13 +17,6 @@ public class PojoConfig {
     }
 
     public String getClassName() {
-        return className;
-    }
-
-    public String getFullClassName() {
-        if (StringUtils.isNotBlank(getPackageName())) {
-            return packageName + "." + className;
-        }
         return className;
     }
 
@@ -42,11 +32,11 @@ public class PojoConfig {
         this.packageName = packageName;
     }
 
-    public Schema getSchema() {
-        return schema;
+    public List<Field> getFields() {
+        return fields;
     }
 
-    public void setSchema(Schema schema) {
-        this.schema = schema;
+    public void setFields(List<Field> fields) {
+        this.fields = fields;
     }
 }
