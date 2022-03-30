@@ -5,8 +5,6 @@ import com.mqjd.datamodel.field.array.ArrayField;
 import com.mqjd.datamodel.schema.Schema;
 import org.junit.Test;
 
-import java.util.Arrays;
-
 public class PojoFactoryTest {
 
     @Test
@@ -14,7 +12,6 @@ public class PojoFactoryTest {
         PojoConfig pojoConfig = new PojoConfig();
         pojoConfig.setPackageName("org");
         pojoConfig.setClassName("Test");
-        pojoConfig.setImports(Arrays.asList("java.util.Arrays", "java.util.Objects"));
         Schema schema = new Schema();
         ArrayField integerField = new ArrayField();
         integerField.setTitle("test1");

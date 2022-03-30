@@ -1,7 +1,6 @@
 package com.mqjd.datamodel.model;
 
 import com.mqjd.datamodel.field.BasicField;
-import com.mqjd.datamodel.field.BasicType;
 import com.mqjd.datamodel.field.array.ArrayField;
 import com.mqjd.datamodel.field.object.ObjectField;
 import com.mqjd.datamodel.schema.Schema;
@@ -14,8 +13,6 @@ import org.codehaus.janino.SimpleCompiler;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class PojoFactory {
     private static final String POJO_TEMPLATE = "pojo.ftl";
@@ -36,21 +33,28 @@ public class PojoFactory {
         }
         try {
             //noinspection unchecked
-            return (Class<T>) compiler.getClassLoader().loadClass(config.getFullClassName());
+            return (Class<T>) compiler.getClassLoader().loadClass(config.newClassName());
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Can not load class " + config.getFullClassName(), e);
+            throw new RuntimeException("Can not load class " + config.newClassName(), e);
         }
     }
 
     private static void analyzePojoConfig(PojoConfig config) {
         Schema schema = config.getSchema();
+    }
 
-        schema.getProperties()
-                .forEach(
-                        (k, v) -> {
-                            BasicType type = v.getType();
-                            Field field = Field.newBuilder().name(k).type(type.name()).build();
-                        });
+    private void buildPojo(BasicField basicField, PojoConfig config) {
+        Pojo.Builder builder = Pojo.builder();
+        builder.className(config.newClassName());
+        builder.packageName(config.getPackageName());
+        if (basicField instanceof ObjectField) {
+            ((ObjectField) basicField)
+                    .getProperties()
+                    .forEach(
+                            (k, v) -> {
+                                builder.addField(Field.newBuilder().name(k).type("").build());
+                            });
+        }
     }
 
     private static boolean isPojoType(BasicField basicField) {

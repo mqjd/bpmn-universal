@@ -8,8 +8,16 @@ public class Field {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getType() {
         return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public static Builder newBuilder() {
@@ -19,6 +27,12 @@ public class Field {
     public static final class Builder {
         private String name;
         private String type;
+
+        private Builder() {}
+
+        public static Builder aField() {
+            return new Builder();
+        }
 
         public Builder name(String name) {
             this.name = name;
@@ -32,8 +46,8 @@ public class Field {
 
         public Field build() {
             Field field = new Field();
-            field.name = this.name;
-            field.type = this.type;
+            field.setName(name);
+            field.setType(type);
             return field;
         }
     }
