@@ -1,6 +1,7 @@
 package com.mqjd.datamodel.model;
 
 import com.mqjd.datamodel.schema.Schema;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -40,5 +41,20 @@ public class PojoConfig {
             return className;
         }
         return String.format("%s$%s", className, index);
+    }
+
+    public String currentClassName() {
+        int index = atomicInteger.get();
+        if (index == 0) {
+            return className;
+        }
+        return String.format("%s$%s", className, index);
+    }
+
+    public String fullClassName() {
+        if (StringUtils.isBlank(packageName)) {
+            return className;
+        }
+        return String.format("%s.%s", packageName, className);
     }
 }

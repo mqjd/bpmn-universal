@@ -1,11 +1,15 @@
 package com.mqjd.datamodel.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Field {
     private String name;
     private String type;
+    private List<String> imports;
 
     public String getName() {
-        return name;
+        return "$" + name;
     }
 
     public void setName(String name) {
@@ -20,27 +24,35 @@ public class Field {
         this.type = type;
     }
 
-    public static Builder newBuilder() {
-        return new Builder();
+    public List<String> getImports() {
+        return imports;
     }
 
-    public static final class Builder {
+    public void setImports(List<String> imports) {
+        this.imports = imports;
+    }
+
+    public static FieldBuilder newFieldBuilder() {
+        return new FieldBuilder();
+    }
+
+    public static final class FieldBuilder {
         private String name;
         private String type;
+        private final List<String> imports = new ArrayList<>();
 
-        private Builder() {}
-
-        public static Builder aField() {
-            return new Builder();
-        }
-
-        public Builder name(String name) {
+        public FieldBuilder name(String name) {
             this.name = name;
             return this;
         }
 
-        public Builder type(String type) {
+        public FieldBuilder type(String type) {
             this.type = type;
+            return this;
+        }
+
+        public FieldBuilder addImport(String fullClassName) {
+            this.imports.add(fullClassName);
             return this;
         }
 
@@ -48,6 +60,7 @@ public class Field {
             Field field = new Field();
             field.setName(name);
             field.setType(type);
+            field.setImports(imports);
             return field;
         }
     }

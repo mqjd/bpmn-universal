@@ -2,6 +2,7 @@ package com.mqjd.datamodel.schema;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.mqjd.datamodel.field.BasicField;
 import com.mqjd.datamodel.field.object.ObjectField;
 
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@JsonSubTypes({@JsonSubTypes.Type(value = Schema.class, name = "object")})
 public class Schema extends ObjectField {
     @JsonProperty("$id")
     private String id;

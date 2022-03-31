@@ -1,23 +1,13 @@
 package com.mqjd.datamodel.model;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class Pojo extends Field {
-    private List<String> imports;
+
     private String className;
     private String packageName;
     private List<Field> fields;
-
-    public List<String> getImports() {
-        return imports;
-    }
-
-    public void setImports(List<String> imports) {
-        this.imports = imports;
-    }
 
     public String getClassName() {
         return className;
@@ -43,53 +33,44 @@ public class Pojo extends Field {
         this.fields = fields;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    public static PojoBuilder newPojoBuilder() {
+        return new PojoBuilder();
     }
 
-    public static final class Builder {
+    public static final class PojoBuilder {
         private String name;
         private String type;
-        private final Set<String> imports;
+        private final List<String> imports = new ArrayList<>();
         private String className;
         private String packageName;
-        private final List<Field> fields;
+        private final List<Field> fields = new ArrayList<>();
 
-        private Builder() {
-            this.fields = new ArrayList<>();
-            this.imports = new HashSet<>();
-        }
-
-        public static Builder aPojo() {
-            return new Builder();
-        }
-
-        public Builder name(String name) {
+        public PojoBuilder name(String name) {
             this.name = name;
             return this;
         }
 
-        public Builder type(String type) {
+        public PojoBuilder type(String type) {
             this.type = type;
             return this;
         }
 
-        public Builder addImport(String classImport) {
-            this.imports.add(classImport);
+        public PojoBuilder addImport(String fullClassName) {
+            this.imports.add(fullClassName);
             return this;
         }
 
-        public Builder className(String className) {
+        public PojoBuilder className(String className) {
             this.className = className;
             return this;
         }
 
-        public Builder packageName(String packageName) {
+        public PojoBuilder packageName(String packageName) {
             this.packageName = packageName;
             return this;
         }
 
-        public Builder addField(Field field) {
+        public PojoBuilder addField(Field field) {
             this.fields.add(field);
             return this;
         }
@@ -98,6 +79,7 @@ public class Pojo extends Field {
             Pojo pojo = new Pojo();
             pojo.setName(name);
             pojo.setType(type);
+            pojo.setImports(imports);
             pojo.setClassName(className);
             pojo.setPackageName(packageName);
             pojo.setFields(fields);

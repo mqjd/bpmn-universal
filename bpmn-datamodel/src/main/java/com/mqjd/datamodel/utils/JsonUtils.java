@@ -53,7 +53,7 @@ public class JsonUtils {
         try {
             return OBJECT_MAPPER.readValue(inputStream, clz);
         } catch (IOException e) {
-            throw new IllegalArgumentException("write obj to string error", e);
+            throw new IllegalArgumentException("read obj from string error", e);
         }
     }
 }
