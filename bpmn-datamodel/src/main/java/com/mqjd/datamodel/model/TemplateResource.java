@@ -6,7 +6,10 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.codehaus.commons.compiler.util.resource.Resource;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 
 public class TemplateResource implements Resource {
@@ -35,7 +38,7 @@ public class TemplateResource implements Resource {
 
     @Override
     public String getFileName() {
-        return pojo.getClassName();
+        return pojo.getPackageName() + "/" + pojo.getClassName();
     }
 
     @Override

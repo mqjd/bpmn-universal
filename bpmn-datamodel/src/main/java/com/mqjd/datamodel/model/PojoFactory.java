@@ -4,24 +4,22 @@ import com.mqjd.datamodel.field.BasicField;
 import com.mqjd.datamodel.field.BasicType;
 import com.mqjd.datamodel.field.array.ArrayField;
 import com.mqjd.datamodel.field.object.ObjectField;
-import com.mqjd.datamodel.schema.Schema;
 import com.sun.org.slf4j.internal.Logger;
 import com.sun.org.slf4j.internal.LoggerFactory;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.commons.lang3.ObjectUtils;
-import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.commons.compiler.ICompiler;
+import org.codehaus.commons.compiler.util.ResourceFinderClassLoader;
+import org.codehaus.commons.compiler.util.resource.MapResourceCreator;
+import org.codehaus.commons.compiler.util.resource.MapResourceFinder;
 import org.codehaus.janino.CompilerFactory;
 import org.codehaus.janino.SimpleCompiler;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PojoFactory {
@@ -43,15 +41,25 @@ public class PojoFactory {
                         .map(v -> new TemplateResource(template, v))
                         .collect(Collectors.toList());
         Collections.reverse(templateResources);
+
+        // Store generated .class files in a Map:
+        Map<String, byte[]> classes = new HashMap<>();
         CompilerFactory compilerFactory = new CompilerFactory();
         ICompiler compiler = compilerFactory.newCompiler();
+        compiler.setClassFileCreator(new MapResourceCreator(classes));
+        compiler.setClassFileFinder(new MapResourceFinder(classes));
         try {
             compiler.compile(templateResources.toArray(new TemplateResource[0]));
         } catch (Exception e) {
             LOG.error("compile code error:");
             throw new IllegalArgumentException("the program can not be compiled", e);
         }
-        return getClass(pojo, classLoader);
+        ClassLoader cl =
+                new ResourceFinderClassLoader(
+                        new MapResourceFinder(classes), // resourceFinder
+                        ClassLoader.getSystemClassLoader() // parent
+                        );
+        return getClass(pojo, cl);
     }
 
     private static void compilePojo(Pojo pojo, SimpleCompiler compiler) {
@@ -92,7 +100,7 @@ public class PojoFactory {
         Pojo.PojoBuilder builder = Pojo.newPojoBuilder();
         builder.className(config.newClassName());
         builder.packageName(config.getPackageName());
-        builder.type(config.currentClassName());
+        builder.type(config.getPackageName() + "." + config.currentClassName());
         builder.name(name);
         ObjectField objectField = (ObjectField) basicField;
         objectField
