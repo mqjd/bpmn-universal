@@ -9,6 +9,10 @@ public class Field {
     private List<String> imports;
 
     public String getName() {
+        return name;
+    }
+
+    public String getFieldName() {
         return "$" + name;
     }
 

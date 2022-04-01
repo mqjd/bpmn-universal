@@ -1,5 +1,6 @@
 package ${packageName};
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 <#list imports as import>
 import ${import};
 </#list>
@@ -7,7 +8,8 @@ import ${import};
 public class ${className} {
 
     <#list fields as field>
-    private ${field.type} ${field.name};
+    @JsonProperty("${field.name}")
+    private ${field.type} ${field.fieldName};
     </#list>
 
 }

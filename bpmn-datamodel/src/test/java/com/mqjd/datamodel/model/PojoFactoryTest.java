@@ -11,17 +11,18 @@ import org.junit.Test;
 public class PojoFactoryTest {
 
     @Test
-    public void testPojoFactory() throws Exception {
+    public void testPojoFactory() {
         PojoConfig pojoConfig = new PojoConfig();
         pojoConfig.setPackageName("org");
         pojoConfig.setClassName("Test");
         BasicField basicField =
-                SchemaFactory.createSchema(getClass().getResourceAsStream("/field/object1.json"));
+                SchemaFactory.createSchema(getClass().getResourceAsStream("/model/object1.json"));
         Assert.assertTrue(basicField instanceof ObjectField);
         Schema schema = JsonUtils.fromJson(JsonUtils.toJson(basicField), Schema.class);
         pojoConfig.setSchema(schema);
         Class<?> aClass = PojoFactory.createPojo(pojoConfig, this.getClass().getClassLoader());
-        Object instance = aClass.newInstance();
-        System.out.println(instance);
+        Object jsonObject =
+                JsonUtils.fromJson(getClass().getResourceAsStream("/model/object1.json"), aClass);
+        System.out.println(JsonUtils.toJson(jsonObject));
     }
 }

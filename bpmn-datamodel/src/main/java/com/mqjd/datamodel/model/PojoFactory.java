@@ -10,16 +10,13 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.commons.lang3.ObjectUtils;
-import org.codehaus.commons.compiler.ICompiler;
-import org.codehaus.commons.compiler.util.ResourceFinderClassLoader;
-import org.codehaus.commons.compiler.util.resource.MapResourceCreator;
-import org.codehaus.commons.compiler.util.resource.MapResourceFinder;
-import org.codehaus.janino.CompilerFactory;
-import org.codehaus.janino.SimpleCompiler;
+import org.codehaus.janino.JavaSourceClassLoader;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class PojoFactory {
@@ -36,49 +33,18 @@ public class PojoFactory {
         List<Pojo> pojoFields = split(pojo);
         pojoFields.add(0, pojo);
         Template template = getPojoTemplate();
-        List<TemplateResource> templateResources =
-                pojoFields.stream()
-                        .map(v -> new TemplateResource(template, v))
-                        .collect(Collectors.toList());
-        Collections.reverse(templateResources);
-
-        // Store generated .class files in a Map:
-        Map<String, byte[]> classes = new HashMap<>();
-        CompilerFactory compilerFactory = new CompilerFactory();
-        ICompiler compiler = compilerFactory.newCompiler();
-        compiler.setClassFileCreator(new MapResourceCreator(classes));
-        compiler.setClassFileFinder(new MapResourceFinder(classes));
-        try {
-            compiler.compile(templateResources.toArray(new TemplateResource[0]));
-        } catch (Exception e) {
-            LOG.error("compile code error:");
-            throw new IllegalArgumentException("the program can not be compiled", e);
-        }
-        ClassLoader cl =
-                new ResourceFinderClassLoader(
-                        new MapResourceFinder(classes), // resourceFinder
-                        ClassLoader.getSystemClassLoader() // parent
-                        );
-        return getClass(pojo, cl);
+        JavaSourceClassLoader sourceClassLoader =
+                new JavaSourceClassLoader(
+                        classLoader, new PojoResourceFinder(pojoFields, template), null);
+        return getClass(config.fullClassName(), sourceClassLoader);
     }
 
-    private static void compilePojo(Pojo pojo, SimpleCompiler compiler) {
-        String code = processTemplate(getPojoTemplate(), pojo);
-        try {
-            compiler.cook(code);
-        } catch (Exception e) {
-            LOG.error("compile code error:");
-            LOG.error(code);
-            throw new IllegalArgumentException("the program can not be compiled", e);
-        }
-    }
-
-    private static <T> Class<T> getClass(Pojo pojo, ClassLoader classLoader) {
+    private static <T> Class<T> getClass(String className, ClassLoader classLoader) {
         try {
             //noinspection unchecked
-            return (Class<T>) classLoader.loadClass(pojo.getClassName());
+            return (Class<T>) classLoader.loadClass(className);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Can not load class " + pojo.getClassName(), e);
+            throw new RuntimeException("Can not load class " + className, e);
         }
     }
 
@@ -100,15 +66,10 @@ public class PojoFactory {
         Pojo.PojoBuilder builder = Pojo.newPojoBuilder();
         builder.className(config.newClassName());
         builder.packageName(config.getPackageName());
-        builder.type(config.getPackageName() + "." + config.currentClassName());
+        builder.type(config.currentClassName());
         builder.name(name);
         ObjectField objectField = (ObjectField) basicField;
-        objectField
-                .getProperties()
-                .forEach(
-                        (k, v) -> {
-                            builder.addField(buildField(k, v, config));
-                        });
+        objectField.getProperties().forEach((k, v) -> builder.addField(buildField(k, v, config)));
         return builder.build();
     }
 

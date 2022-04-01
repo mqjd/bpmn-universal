@@ -40,7 +40,7 @@ public class PojoConfig {
         if (index == 0) {
             return className;
         }
-        return String.format("%s$%s", className, index);
+        return String.format("%s%s", className, index);
     }
 
     public String currentClassName() {
@@ -48,7 +48,7 @@ public class PojoConfig {
         if (index == 0) {
             return className;
         }
-        return String.format("%s$%s", className, index);
+        return String.format("%s%s", className, index);
     }
 
     public String fullClassName() {

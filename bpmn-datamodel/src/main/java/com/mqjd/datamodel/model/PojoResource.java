@@ -12,12 +12,12 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 
-public class TemplateResource implements Resource {
-    private static final Logger LOG = LoggerFactory.getLogger(TemplateResource.class);
+public class PojoResource implements Resource {
+    private static final Logger LOG = LoggerFactory.getLogger(PojoResource.class);
     private final Template template;
     private final Pojo pojo;
 
-    public TemplateResource(Template template, Pojo pojo) {
+    public PojoResource(Template template, Pojo pojo) {
         this.template = template;
         this.pojo = pojo;
     }
@@ -28,7 +28,6 @@ public class TemplateResource implements Resource {
             StringWriter stringWriter = new StringWriter();
             template.process(pojo, stringWriter);
             String code = stringWriter.toString();
-            LOG.warn(code);
             return new ByteArrayInputStream(code.getBytes(StandardCharsets.UTF_8));
         } catch (TemplateException e) {
             LOG.error("process template failed: {}", pojo);
@@ -38,7 +37,7 @@ public class TemplateResource implements Resource {
 
     @Override
     public String getFileName() {
-        return pojo.getPackageName() + "/" + pojo.getClassName();
+        return pojo.getPackageName() + "/" + pojo.getClassName() + ".java";
     }
 
     @Override

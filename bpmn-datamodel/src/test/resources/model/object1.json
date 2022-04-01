@@ -6,6 +6,24 @@
     "title": "test_string",
     "description": "test string field description"
   },
+  "properties": {
+    "street_address": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "residential",
+        "business"
+      ]
+    }
+  },
   "required": [
     "street_address",
     "city",
