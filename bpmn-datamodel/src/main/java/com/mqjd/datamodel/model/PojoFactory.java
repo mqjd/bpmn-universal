@@ -4,13 +4,13 @@ import com.mqjd.datamodel.field.BasicField;
 import com.mqjd.datamodel.field.BasicType;
 import com.mqjd.datamodel.field.array.ArrayField;
 import com.mqjd.datamodel.field.object.ObjectField;
-import com.sun.org.slf4j.internal.Logger;
-import com.sun.org.slf4j.internal.LoggerFactory;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.commons.lang3.ObjectUtils;
 import org.codehaus.janino.JavaSourceClassLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.StringWriter;

@@ -1,10 +1,10 @@
 package com.mqjd.datamodel.model;
 
-import com.sun.org.slf4j.internal.Logger;
-import com.sun.org.slf4j.internal.LoggerFactory;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.codehaus.commons.compiler.util.resource.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
