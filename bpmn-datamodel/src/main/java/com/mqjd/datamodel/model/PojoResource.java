@@ -37,7 +37,7 @@ public class PojoResource implements Resource {
 
     @Override
     public String getFileName() {
-        return pojo.getPackageName() + "/" + pojo.getClassName() + ".java";
+        return pojo.getPackageName().replace(".", "/") + "/" + pojo.getClassName() + ".java";
     }
 
     @Override

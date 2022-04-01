@@ -66,7 +66,7 @@ public class PojoFactory {
         Pojo.PojoBuilder builder = Pojo.newPojoBuilder();
         builder.className(config.newClassName());
         builder.packageName(config.getPackageName());
-        builder.type(config.currentClassName());
+        builder.type(config.getPackageName() + "." + config.currentClassName());
         builder.name(name);
         ObjectField objectField = (ObjectField) basicField;
         objectField.getProperties().forEach((k, v) -> builder.addField(buildField(k, v, config)));

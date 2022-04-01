@@ -13,7 +13,7 @@ public class PojoFactoryTest {
     @Test
     public void testPojoFactory() {
         PojoConfig pojoConfig = new PojoConfig();
-        pojoConfig.setPackageName("org");
+        pojoConfig.setPackageName("org.mqjd");
         pojoConfig.setClassName("Test");
         BasicField basicField =
                 SchemaFactory.createSchema(getClass().getResourceAsStream("/model/object1.json"));

@@ -40,6 +40,7 @@
         <janino.version>3.1.6</janino.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <jackson.version>2.13.2.2</jackson.version>
+        <vertx.version>4.2.6</vertx.version>
     </properties>
 
     <dependencyManagement>
@@ -94,6 +95,13 @@
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
                 <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-stack-depchain</artifactId>
+                <version>${vertx.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
