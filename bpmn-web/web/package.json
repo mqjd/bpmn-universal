@@ -9,6 +9,10 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@ant-design/icons-vue": "^6.1.0",
+    "ant-design-vue": "^2.2.8",
+    "axios": "^0.26.1",
+    "monaco-editor": "^0.33.0",
     "pinia": "^2.0.13",
     "vue": "^3.2.31",
     "vue-router": "^4.0.14"

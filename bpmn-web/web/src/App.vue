@@ -1,3 +1,18 @@
+<template>
+  <RouterView />
+</template>
+
+<style>
+@import '@/assets/base.css';
+
+#app {
+  width: 100%;
+  height: 100%;
+}
+</style>
+
+
+
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from '@/components/HelloWorld.vue'
