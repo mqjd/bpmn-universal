@@ -1,7 +1,7 @@
 <template>
-  <a-menu mode="inline">
+  <el-menu :collapse="collapsed">
     <menu-item v-for="item of avalibleMenus" :key="item.name" :base-path="item.path" :item="item"></menu-item>
-  </a-menu>
+  </el-menu>
 </template>
 
 <script>
@@ -14,7 +14,12 @@ export default defineComponent({
     MenuItem,
   },
   computed: {
-    ...mapWritableState(useMenuStore, ["avalibleMenus"]),
+    ...mapWritableState(useMenuStore, ["avalibleMenus", "collapsed"]),
   },
 });
 </script>
+<style>
+.el-menu {
+  height: 100%;
+}
+</style>

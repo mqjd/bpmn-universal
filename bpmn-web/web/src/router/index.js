@@ -9,7 +9,7 @@ export const routers = [{
             cache: false,
             tab: false,
             title: '主页',
-            icon: 'home-outlined',
+            icon: 'home-filled',
         },
         component: MainView
     },
@@ -21,7 +21,7 @@ export const routers = [{
             cache: false,
             tab: false,
             title: '主页',
-            icon: 'apple-outlined',
+            icon: 'home-filled',
         },
         component: () =>
             import ('../views/main/MainView.vue'),
@@ -33,7 +33,7 @@ export const routers = [{
                 cache: false,
                 tab: false,
                 title: '关于',
-                icon: 'home-outlined',
+                icon: 'home-filled',
             },
             component: () =>
                 import ('../views/AboutView.vue')

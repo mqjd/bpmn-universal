@@ -1,18 +1,17 @@
 <template>
-  <a-layout>
-    <a-layout-header>
+  <el-container>
+    <el-header>
       <main-header />
-    </a-layout-header>
-    <a-layout>
-      <a-layout-sider :collapsed="collapsed">
+    </el-header>
+    <el-container>
+      <el-aside width="200px">
         <main-menu></main-menu>
-      </a-layout-sider>
-      <a-layout-content>
+      </el-aside>
+      <el-main>
         <router-view />
-      </a-layout-content>
-    </a-layout>
-    <a-layout-footer>Footer</a-layout-footer>
-  </a-layout>
+      </el-main>
+    </el-container>
+  </el-container>
 </template>
 <script>
 import MainHeader from "./components/header/index.vue";
@@ -33,15 +32,7 @@ export default defineComponent({
 });
 </script>
 <style>
-.ant-layout {
+.el-container {
   height: 100%;
-}
-.ant-layout-header,
-.ant-layout-footer,
-.ant-layout-sider {
-  background: #ffffff;
-}
-.ant-layout-header {
-  padding-left: 10px;
 }
 </style>

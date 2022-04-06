@@ -1,32 +1,33 @@
 <template>
-  <a-sub-menu :key="item.name" v-if="item.children">
-    <template #icon>
-      <component :is="item.meta.icon" />
+  <el-sub-menu :index="item.name" v-if="item.children">
+    <template #title>
+      <el-icon>
+        <component :is="item.meta.icon" />
+      </el-icon>
+      <span>{{ item.meta.title }}</span>
     </template>
-    <template #title>{{ item.meta.title }}</template>
-
-    <side-menu-item
+    <menu-item
       v-for="child of item.children"
       :key="child.name"
       :item="child"
       :base-path="resolvePath(child.path)"
-    ></side-menu-item>
-  </a-sub-menu>
-  <router-link :to="resolvePath(item.path)" v-else>
-    <a-menu-item :key="item.name">
-      <template #icon>
-        <component :is="item.meta.icon" />
-      </template>
-      {{ item.meta.title }}
-    </a-menu-item>
-  </router-link>
+    ></menu-item>
+  </el-sub-menu>
+  <el-menu-item :index="item.name" v-else>
+    <el-icon>
+      <component :is="item.meta.icon" />
+    </el-icon>
+    <template #title>
+      <router-link class="link" :to="resolvePath(item.path)">{{ item.meta.title }}</router-link>
+    </template>
+  </el-menu-item>
 </template>
 
 <script>
 import { RouterView } from "vue-router";
 import { defineComponent } from "vue";
 export default defineComponent({
-  name: "SideMenuItem",
+  name: "MenuItem",
   components: {
     RouterView,
   },
@@ -50,3 +51,27 @@ export default defineComponent({
   },
 });
 </script>
+<style>
+.link {
+  text-decoration: none;
+}
+
+.is-dark .link {
+  color: var(--el-color-white);
+}
+.link:active,
+.link:visited,
+.link:hover,
+.link:link {
+  color: initial;
+}
+.el-menu-item.is-active .link {
+  color: var(--el-menu-active-color);
+}
+.is-dark .link:active,
+.is-dark .link:visited,
+.is-dark .link:hover,
+.is-dark .link:link {
+  color: var(--el-color-white);
+}
+</style>
