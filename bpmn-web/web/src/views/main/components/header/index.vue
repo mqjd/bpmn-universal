@@ -1,13 +1,17 @@
 <template>
   <div class="app-header">
-    <a-button :class="isCollapse ? 'active' : ''" @click="toggleSideMenu()">
-      <template #icon><menu-unfold-outlined /></template>
+    <a-button @click="toggleSideMenu()">
+      <template #icon>
+        <menu-unfold-outlined v-if="collapsed" />
+        <menu-fold-outlined v-else />
+      </template>
     </a-button>
   </div>
 </template>
 <script>
-import { useMenuStore } from "../../../../stores/menu";
-import { defineComponent, ref, watch } from "vue";
+import { mapWritableState } from "pinia";
+import { useMenuStore } from "@/stores/menu";
+import { defineComponent } from "vue";
 export default defineComponent({
   setup() {
     const store = useMenuStore();
@@ -16,9 +20,7 @@ export default defineComponent({
     };
   },
   computed: {
-    isCollapse() {
-      return this.store.collapse;
-    },
+    ...mapWritableState(useMenuStore, ["collapsed"]),
   },
   methods: {
     toggleSideMenu() {
@@ -29,16 +31,4 @@ export default defineComponent({
 </script>
 
 <style>
-.a-button {
-  margin: 5px 0px;
-  border: none;
-  font-size: 18px;
-  padding: 7px;
-  transition: 0.38s;
-  transform-origin: 50% 50%;
-}
-
-.a-button:active {
-  transform: rotate(90deg);
-}
 </style>

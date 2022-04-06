@@ -1,7 +1,7 @@
 <template>
   <a-sub-menu :key="item.name" v-if="item.children">
     <template #icon>
-      <MailOutlined />
+      <component :is="item.meta.icon" />
     </template>
     <template #title>{{ item.meta.title }}</template>
 
@@ -10,17 +10,20 @@
       :key="child.name"
       :item="child"
       :base-path="resolvePath(child.path)"
-    >
-    </side-menu-item>
+    ></side-menu-item>
   </a-sub-menu>
   <router-link :to="resolvePath(item.path)" v-else>
-    <a-menu-item :key="item.name">{{ item.meta.title }}</a-menu-item>
+    <a-menu-item :key="item.name">
+      <template #icon>
+        <component :is="item.meta.icon" />
+      </template>
+      {{ item.meta.title }}
+    </a-menu-item>
   </router-link>
 </template>
 
 <script>
 import { RouterView } from "vue-router";
-import path from "path";
 import { defineComponent } from "vue";
 export default defineComponent({
   name: "SideMenuItem",
@@ -39,7 +42,7 @@ export default defineComponent({
   methods: {
     resolvePath(routePath) {
       if (this.item.children) {
-        return path.resolve(this.basePath, routePath);
+        return (this.basePath + "/" + routePath).replace(/\/{2,}/, '/')
       } else {
         return this.basePath;
       }
