@@ -14,29 +14,88 @@ export const routers = [{
         component: MainView
     },
     {
+        path: '/data',
+        name: 'data',
+        meta: {
+            hidden: false,
+            cache: false,
+            tab: false,
+            title: '数据',
+            icon: 'menu',
+        },
+        component: MainView,
+        children: [{
+            path: '/schena',
+            name: 'schema',
+            meta: {
+                hidden: false,
+                cache: false,
+                tab: false,
+                title: '模型',
+                icon: 'share',
+            },
+            component: () =>
+                import ('../views/schema/Schema.vue')
+        }, {
+            path: '/source',
+            name: 'data-source',
+            meta: {
+                hidden: false,
+                cache: false,
+                tab: false,
+                title: '数据源',
+                icon: 'coin',
+            },
+            component: () =>
+                import ('../views/datasource/DataSource.vue')
+        }, {
+            path: '/set',
+            name: 'data-set',
+            meta: {
+                hidden: false,
+                cache: false,
+                tab: false,
+                title: '数据集',
+                icon: 'takeaway-box',
+            },
+            component: () =>
+                import ('../views/dataset/DataSet.vue')
+        }]
+    }, {
         path: '/main',
         name: 'main',
         meta: {
             hidden: false,
             cache: false,
             tab: false,
-            title: '主页',
-            icon: 'home-filled',
+            title: '设计',
+            icon: 'data-board',
         },
-        component: () =>
-            import ('../views/main/MainView.vue'),
+        component: MainView,
         children: [{
-            path: '/about',
-            name: 'about',
+            path: '/page',
+            name: 'page',
             meta: {
                 hidden: false,
                 cache: false,
                 tab: false,
-                title: '关于',
-                icon: 'home-filled',
+                title: '页面',
+                icon: 'document-add',
             },
             component: () =>
-                import ('../views/AboutView.vue')
+                import ('../views/page/Page.vue')
+        }, {
+            path: '/flow',
+            name: 'flow',
+            meta: {
+                hidden: false,
+                cache: false,
+                tab: false,
+                title: '流程',
+                icon: 'guide',
+            },
+            component: () =>
+                import ('../views/flow/Flow.vue')
         }]
     }
 ]

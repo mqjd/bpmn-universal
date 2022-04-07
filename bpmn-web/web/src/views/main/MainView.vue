@@ -4,7 +4,7 @@
       <main-header />
     </el-header>
     <el-container>
-      <el-aside width="200px">
+      <el-aside width="auto">
         <main-menu></main-menu>
       </el-aside>
       <el-main>
@@ -34,5 +34,11 @@ export default defineComponent({
 <style>
 .el-container {
   height: 100%;
+}
+.el-header {
+  border-bottom: solid 1px var(--el-border-color);
+}
+.el-aside {
+  border-right: solid 1px var(--el-border-color);
 }
 </style>
