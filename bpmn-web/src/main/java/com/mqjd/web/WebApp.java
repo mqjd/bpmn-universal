@@ -1,7 +1,6 @@
 package com.mqjd.web;
 
 import com.mqjd.web.annotation.RestHandler;
-import com.mqjd.web.handler.TestHandler;
 import com.mqjd.web.util.AnnotationFilter;
 import com.mqjd.web.util.ClassPathScanner;
 import io.vertx.core.AbstractVerticle;
@@ -11,11 +10,7 @@ import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.StaticHandler;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
 
-@ComponentScan("com.mqjd.web")
 public class WebApp extends AbstractVerticle {
     public static void main(String[] args) {
         Vertx vertx = Vertx.vertx();

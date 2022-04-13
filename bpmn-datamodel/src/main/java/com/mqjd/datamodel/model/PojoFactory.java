@@ -28,6 +28,14 @@ public class PojoFactory {
         cfg.setClassForTemplateLoading(PojoFactory.class, "/template");
     }
 
+    public static <T> Class<T> genPojo(PojoConfig config, ClassLoader classLoader) {
+        Pojo pojo = buildPojo(null, config.getSchema(), config);
+        List<Pojo> pojoFields = split(pojo);
+        pojoFields.add(0, pojo);
+
+        return null;
+    }
+
     public static <T> Class<T> createPojo(PojoConfig config, ClassLoader classLoader) {
         Pojo pojo = buildPojo(null, config.getSchema(), config);
         List<Pojo> pojoFields = split(pojo);

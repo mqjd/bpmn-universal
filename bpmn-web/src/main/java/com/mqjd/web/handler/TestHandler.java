@@ -5,9 +5,7 @@ import com.mqjd.web.annotation.RestHandler;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.RoutingContext;
-import org.springframework.stereotype.Component;
 
-@Component
 @RestHandler(value = "/test", method = RequestMethod.GET)
 public class TestHandler implements Handler<RoutingContext> {
 

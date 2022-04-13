@@ -42,6 +42,7 @@
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <jackson.version>2.13.2.2</jackson.version>
         <vertx.version>4.2.6</vertx.version>
+        <asm.version>9.3</asm.version>
     </properties>
 
     <dependencyManagement>
@@ -103,6 +104,11 @@
                 <version>${vertx.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm</artifactId>
+                <version>${asm.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
