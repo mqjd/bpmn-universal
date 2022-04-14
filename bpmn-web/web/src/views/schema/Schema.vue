@@ -5,12 +5,12 @@
         <template #default="{ node, data }">
           <span class="tree-node-content">
             <span class="tree-node-text">{{ node.label }}</span>
-            <el-button @click="append(data)" v-if="!node.isLeaf" circle>
+            <el-button @click="append(data)" v-if="node.level === 1 || !node.isLeaf" circle>
               <el-icon :size="15">
                 <circle-plus />
               </el-icon>
             </el-button>
-            <el-button @click="remove(node, data)" circle>
+            <el-button @click="remove(node, data)" circle v-if="node.level !== 1">
               <el-icon :size="15">
                 <delete />
               </el-icon>
@@ -20,13 +20,14 @@
       </el-tree>
     </el-col>
     <el-col :span="12">
-      <schema-form :schema="schema"></schema-form>
+      <schema-form :schema="schema" v-model="modelValue"></schema-form>
     </el-col>
   </el-row>
 </template>
 <script setup>
 import SchemaForm from '@/components/form/SchemaForm.vue'
 import schema from './BasicSchema'
+import { ref, watch } from "vue";
 let id = 1000;
 const defaultProps = {
   children: "children",
@@ -84,6 +85,8 @@ const remove = (node, data) => {
   const index = children.findIndex((d) => d.id === data.id);
   children.splice(index, 1);
 }
+const modelValue = ref({})
+
 </script>
 <style>
 .el-row {
