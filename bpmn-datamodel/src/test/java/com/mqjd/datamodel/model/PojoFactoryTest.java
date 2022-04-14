@@ -12,6 +12,7 @@ public class PojoFactoryTest {
 
     @Test
     public void testPojoFactory() {
+        GenClassLoader classLoader = new GenClassLoader(this.getClass().getClassLoader());
         PojoConfig pojoConfig = new PojoConfig();
         pojoConfig.setPackageName("org.mqjd");
         pojoConfig.setClassName("Test");
@@ -20,7 +21,7 @@ public class PojoFactoryTest {
         Assert.assertTrue(basicField instanceof ObjectField);
         Schema schema = JsonUtils.fromJson(JsonUtils.toJson(basicField), Schema.class);
         pojoConfig.setSchema(schema);
-        Class<?> aClass = PojoFactory.createPojo(pojoConfig, this.getClass().getClassLoader());
+        Class<?> aClass = classLoader.genPojo(pojoConfig);
         Object jsonObject =
                 JsonUtils.fromJson(getClass().getResourceAsStream("/model/object1.json"), aClass);
         System.out.println(JsonUtils.toJson(jsonObject));

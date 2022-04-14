@@ -4,13 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
 import com.mqjd.datamodel.field.array.ArrayField;
 import com.mqjd.datamodel.field.object.ObjectField;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
 @JsonSubTypes({
@@ -110,9 +109,9 @@ public class BasicField {
     @JsonIgnore
     public BasicType getType() {
         Set<BasicType> basicTypes =
-                Sets.newHashSet(
-                        Iterables.concat(
-                                collectTypes(allOf), collectTypes(anyOf), collectTypes(oneOf)));
+                Stream.of(collectTypes(allOf), collectTypes(anyOf), collectTypes(oneOf))
+                        .flatMap(Collection::stream)
+                        .collect(Collectors.toSet());
         return basicTypes.size() == 1 ? basicTypes.stream().findFirst().get() : BasicType.ANY;
     }
 

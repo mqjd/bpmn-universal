@@ -1,19 +1,18 @@
 package com.mqjd.web.util;
 
-import org.codehaus.commons.compiler.util.ResourceFinderClassLoader;
-import org.codehaus.commons.compiler.util.resource.MapResourceFinder;
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
+import java.io.IOException;
 
 public class ClassPathScannerTest {
     @Test
-    public void test() throws ClassNotFoundException {
+    public void test() throws ClassNotFoundException, IOException {
         String className = "Test";
         String fieldName = "a";
         ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
@@ -28,16 +27,9 @@ public class ClassPathScannerTest {
         generatedInit(classWriter);
         classWriter.visitField(Opcodes.ACC_PUBLIC, fieldName, "Ljava/lang/String;", null, null);
         generatedGet(classWriter, fieldName, className);
+        classWriter.visitEnd();
         byte[] bytes = classWriter.toByteArray();
-        Map<String, byte[]> classes = new HashMap<>();
-        classes.put(className + ".class", bytes);
-        ClassLoader cl =
-                new ResourceFinderClassLoader(
-                        new MapResourceFinder(classes), // resourceFinder
-                        ClassLoader.getSystemClassLoader() // parent
-                        );
-        Class<?> aClass = cl.loadClass(className);
-        System.out.println(aClass);
+        FileUtils.writeByteArrayToFile(new File("a.class"), bytes, false);
     }
 
     private void generatedInit(ClassWriter cw) {
@@ -47,6 +39,7 @@ public class ClassPathScannerTest {
         Label initLabel = new Label();
         mv.visitLabel(initLabel);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
+        mv.visitLineNumber(15, initLabel);
         mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(1, 1);
@@ -68,7 +61,7 @@ public class ClassPathScannerTest {
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(Opcodes.GETFIELD, className, name, "Ljava/lang/String;");
         mv.visitInsn(Opcodes.ARETURN);
-        mv.visitMaxs(2, 2);
+        mv.visitMaxs(1, 1);
         mv.visitEnd();
     }
 

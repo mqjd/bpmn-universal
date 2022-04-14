@@ -1,7 +1,7 @@
 package com.mqjd.datamodel.model;
 
 import com.mqjd.datamodel.schema.Schema;
-import org.apache.commons.lang3.StringUtils;
+import com.mqjd.datamodel.utils.StringUtils;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

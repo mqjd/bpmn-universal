@@ -21,6 +21,10 @@ public class Pojo extends Field {
         return packageName;
     }
 
+    public String getFullClassName() {
+        return packageName + "." + className;
+    }
+
     public void setPackageName(String packageName) {
         this.packageName = packageName;
     }
@@ -43,6 +47,7 @@ public class Pojo extends Field {
         private final List<String> imports = new ArrayList<>();
         private String className;
         private String packageName;
+        private String fullType;
         private final List<Field> fields = new ArrayList<>();
 
         public PojoBuilder name(String name) {
@@ -52,6 +57,11 @@ public class Pojo extends Field {
 
         public PojoBuilder type(String type) {
             this.type = type;
+            return this;
+        }
+
+        public PojoBuilder fullType(String fullType) {
+            this.fullType = fullType;
             return this;
         }
 
@@ -79,6 +89,7 @@ public class Pojo extends Field {
             Pojo pojo = new Pojo();
             pojo.setName(name);
             pojo.setType(type);
+            pojo.setFullType(fullType);
             pojo.setImports(imports);
             pojo.setClassName(className);
             pojo.setPackageName(packageName);

@@ -6,6 +6,7 @@ import java.util.List;
 public class Field {
     private String name;
     private String type;
+    private String fullType;
     private List<String> imports;
 
     public String getName() {
@@ -36,6 +37,14 @@ public class Field {
         this.imports = imports;
     }
 
+    public String getFullType() {
+        return fullType;
+    }
+
+    public void setFullType(String fullType) {
+        this.fullType = fullType;
+    }
+
     public static FieldBuilder newFieldBuilder() {
         return new FieldBuilder();
     }
@@ -43,6 +52,7 @@ public class Field {
     public static final class FieldBuilder {
         private String name;
         private String type;
+        private String fullType;
         private final List<String> imports = new ArrayList<>();
 
         public FieldBuilder name(String name) {
@@ -55,6 +65,11 @@ public class Field {
             return this;
         }
 
+        public FieldBuilder fullType(String fullType) {
+            this.fullType = fullType;
+            return this;
+        }
+
         public FieldBuilder addImport(String fullClassName) {
             this.imports.add(fullClassName);
             return this;
@@ -64,6 +79,7 @@ public class Field {
             Field field = new Field();
             field.setName(name);
             field.setType(type);
+            field.setFullType(fullType);
             field.setImports(imports);
             return field;
         }
