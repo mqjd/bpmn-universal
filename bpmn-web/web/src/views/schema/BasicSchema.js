@@ -5,6 +5,12 @@ const basicSchema = {
     "meta:ui:description": "字段",
     "meta:ui:placeholder": "字段",
     "properties": {
+        "$key": {
+            "type": "string",
+            "meta:ui:title": "字段KEY",
+            "meta:ui:description": "字段KEY",
+            "meta:ui:placeholder": "字段KEY"
+        },
         "type": {
             "$ref": "#/$defs/simpleTypes",
             "meta:ui:title": "类型",
@@ -82,13 +88,6 @@ const basicSchema = {
         },
         "then": {
             "properties": {
-                "multipleOf": {
-                    "type": "integer",
-                    "exclusiveMinimum": 0,
-                    "meta:ui:title": "倍数",
-                    "meta:ui:description": "数据类型校验规则，数值必须为输入值的整数倍",
-                    "meta:ui:placeholder": "请输入"
-                },
                 "maximum": {
                     "type": "integer",
                     "exclusiveMinimum": 0,
@@ -113,6 +112,13 @@ const basicSchema = {
                     "meta:ui:title": "最小值(不包含)",
                     "meta:ui:description": "最小值，不包括该值(>=)",
                     "meta:ui:placeholder": "请输入最小值"
+                },
+                "multipleOf": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "meta:ui:title": "倍数",
+                    "meta:ui:description": "数据类型校验规则，数值必须为输入值的整数倍",
+                    "meta:ui:placeholder": "请输入"
                 },
                 "enum": {
                     "type": "array",
@@ -138,13 +144,6 @@ const basicSchema = {
         },
         "then": {
             "properties": {
-                "multipleOf": {
-                    "type": "number",
-                    "exclusiveMinimum": 0,
-                    "meta:ui:title": "倍数",
-                    "meta:ui:description": "数据类型校验规则，数值必须为输入值的整数倍",
-                    "meta:ui:placeholder": "请输入"
-                },
                 "maximum": {
                     "type": "number",
                     "exclusiveMinimum": 0,
@@ -169,6 +168,20 @@ const basicSchema = {
                     "meta:ui:title": "最小值(不包含)",
                     "meta:ui:description": "最小值，不包括该值(>=)",
                     "meta:ui:placeholder": "请输入最小值"
+                },
+                "precision": {
+                    "type": "integer",
+                    "minimum": -1,
+                    "meta:ui:title": "小数位数",
+                    "meta:ui:description": "小数位数)",
+                    "meta:ui:placeholder": "小数位数"
+                },
+                "multipleOf": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "meta:ui:title": "倍数",
+                    "meta:ui:description": "数据类型校验规则，数值必须为输入值的整数倍",
+                    "meta:ui:placeholder": "请输入"
                 },
                 "enum": {
                     "type": "array",

@@ -4,13 +4,13 @@
             :is="schema.type + '-field'"
             :schema="schema"
             :root-schema="rootSchema"
-            v-model="value"
+            v-model="schemaValue"
         />
     </div>
 </template>
 <script setup>
 import { CHANGE_EVENT, UPDATE_MODEL_EVENT } from '@/constants'
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 const props = defineProps({
     schema: {
         type: Object,
@@ -19,13 +19,17 @@ const props = defineProps({
     rootSchema: Object,
     modelValue: Object | String
 })
-const value = ref(props.modelValue)
 
+const nativeInputValue = computed(() => props.modelValue)
+const schemaValue = ref(nativeInputValue.value)
+
+watch(nativeInputValue, (newValue, oldValue) => {
+    schemaValue.value = newValue;
+})
 const emits = defineEmits([CHANGE_EVENT, UPDATE_MODEL_EVENT])
 
-watch(value, (newValue, oldValue) => {
+watch(schemaValue, (newValue, oldValue) => {
     emits(CHANGE_EVENT, newValue)
     emits(UPDATE_MODEL_EVENT, newValue)
 })
-
 </script>

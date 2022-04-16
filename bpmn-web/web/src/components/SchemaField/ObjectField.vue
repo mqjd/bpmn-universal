@@ -9,9 +9,11 @@
     </el-form-item>
 </template>
 <script setup>
-import { CHANGE_EVENT,UPDATE_MODEL_EVENT } from '@/constants'
+import { CHANGE_EVENT, UPDATE_MODEL_EVENT } from '@/constants'
 import { createValidater, tileSchema } from '@/utils/json-schema'
-import { reactive, watch, computed } from "vue";
+import { ref, watch, computed } from "vue";
+
+const emits = defineEmits([CHANGE_EVENT, UPDATE_MODEL_EVENT])
 const props = defineProps({
     schema: {
         type: Object,
@@ -25,8 +27,14 @@ const props = defineProps({
         default: {}
     }
 })
-const objectValue = reactive(props.modelValue)
-const emits = defineEmits([CHANGE_EVENT,UPDATE_MODEL_EVENT])
+
+const nativeValue = computed(() => props.modelValue)
+const objectValue = ref(nativeValue.value)
+
+watch(nativeValue, (newValue, oldValue) => {
+    objectValue.value = newValue;
+})
+
 watch(objectValue, (newValue, oldValue) => {
     emits(CHANGE_EVENT, newValue)
     emits(UPDATE_MODEL_EVENT, newValue)
@@ -44,14 +52,24 @@ const ifValidators = computed(() => {
     return [];
 })
 
+const id = computed(() => objectValue.value.id)
+
 const ifProperties = computed(() => {
     var validators = ifValidators.value
     for (let i = 0; i < validators.length; i++) {
-        if (validators[i][0](objectValue)) {
+        if (validators[i][0](objectValue.value)) {
             return Object.entries(validators[i][1].properties)
         }
     }
     return [];
+})
+
+watch([id, ifProperties], ([newId, newIfProperties], [oldId, oldIfProperties]) => {
+    if (newId === oldId) {
+        oldIfProperties.forEach(v => {
+            delete objectValue.value[v[0]];
+        })
+    }
 })
 
 const properties = computed(() => {

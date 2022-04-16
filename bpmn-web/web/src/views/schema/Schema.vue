@@ -2,6 +2,7 @@
   <el-row>
     <el-col :span="12">
       <el-tree
+        class="schema-tree"
         :data="treeData"
         :props="defaultProps"
         :expand-on-click-node="false"
@@ -11,7 +12,12 @@
         <template #default="{ node, data }">
           <span class="tree-node-content">
             <span class="tree-node-text">{{ node.label }}</span>
-            <el-button @click="append(data, node)" v-if="node.level === 1 || !node.isLeaf" circle>
+            <span class="tree-node-type" v-if="data.type">{{ data.type.toUpperCase() }}</span>
+            <el-button
+              @click="append(data, node)"
+              v-if="data.type === 'object' || data.type === 'array'"
+              circle
+            >
               <el-icon :size="15">
                 <circle-plus />
               </el-icon>
@@ -26,27 +32,35 @@
       </el-tree>
     </el-col>
     <el-col :span="12">
-      <schema-form :schema="basicSchema" v-model="modelValue.value"></schema-form>
+      <schema-form :schema="basicSchema" v-model="currentNodeValue" v-if="currentNodeValue"></schema-form>
     </el-col>
   </el-row>
 </template>
 <script setup>
-import SchemaForm from '@/components/SchemaForm/SchemaForm.vue'
 import basicSchema from './BasicSchema'
 import { schemaToTree } from '@/utils/json-schema'
-import { reactive, computed } from "vue";
+import { ref } from "vue";
 let id = 1000;
 const defaultProps = {
   children: "children",
   label: "meta:ui:title",
 }
-let modelValue = reactive({value:{}})
+let currentNodeValue = ref()
+let currentNode = ref()
 const onSelectChange = (data, node) => {
-  modelValue.value = data
+  currentNodeValue.value = data
+  currentNode.value = node
 }
-
+const keys = {}
 const append = (data) => {
-  const newChild = { id: id++, "meta:ui:title": "testtest", children: [] };
+  if (!keys[data.id]) {
+    keys[data.id] = (data.children || []).reduce((result, item) => {
+      return Math.max(+item.id.substring(data.id.length + 1), result)
+    }, 0)
+  }
+  keys[data.id]++
+  const id = data.id + '-' + keys[data.id];
+  const newChild = { id: id, "meta:ui:title": "字段" + id, children: [] };
   if (!data.children) {
     data.children = [];
   }
@@ -57,13 +71,19 @@ const remove = (data, node) => {
   const children = parent.data.children || parent.data;
   const index = children.findIndex((d) => d.id === data.id);
   children.splice(index, 1);
+  delete node.parent.data.properties[data.$key];
 }
-
-const treeData = computed(() => [schemaToTree(basicSchema)])
+const treeData = ref([schemaToTree(basicSchema)])
 </script>
 <style>
 .el-row {
   height: 100%;
+}
+.schema-tree {
+  height: 100%;
+}
+.is-current > .el-tree-node__content:nth-child(1) {
+  background-color: var(--el-tree-node-hover-bg-color);
 }
 .el-button {
   border: none;
@@ -79,6 +99,15 @@ const treeData = computed(() => [schemaToTree(basicSchema)])
   display: inline-block;
   margin-right: 10px;
   font-size: 1.2em;
+}
+.tree-node-type {
+  display: inline-block;
+  padding: 2px 8px;
+  margin-right: 10px;
+  font-size: .8em;
+  box-shadow: 0 0 0 1px var(--el-input-border-color, var(--el-border-color))
+    inset;
+  border-radius: var(--el-input-border-radius, var(--el-border-radius-base));
 }
 .el-tree-node__content {
   padding-top: 20px;
