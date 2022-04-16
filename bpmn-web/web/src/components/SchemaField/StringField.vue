@@ -15,7 +15,7 @@ import { UPDATE_MODEL_EVENT } from '@/constants'
 import { ref, watch } from "vue";
 const props = defineProps({
     schema: Object,
-    modelValue: String | Array,
+    modelValue: String | Array
 })
 const value = ref(props.modelValue)
 const emits = defineEmits([UPDATE_MODEL_EVENT])

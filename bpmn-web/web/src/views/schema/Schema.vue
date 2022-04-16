@@ -1,16 +1,22 @@
 <template>
   <el-row>
     <el-col :span="12">
-      <el-tree :data="data" :props="defaultProps" default-expand-all :expand-on-click-node="false">
+      <el-tree
+        :data="treeData"
+        :props="defaultProps"
+        :expand-on-click-node="false"
+        @current-change="onSelectChange"
+        default-expand-all
+      >
         <template #default="{ node, data }">
           <span class="tree-node-content">
             <span class="tree-node-text">{{ node.label }}</span>
-            <el-button @click="append(data)" v-if="node.level === 1 || !node.isLeaf" circle>
+            <el-button @click="append(data, node)" v-if="node.level === 1 || !node.isLeaf" circle>
               <el-icon :size="15">
                 <circle-plus />
               </el-icon>
             </el-button>
-            <el-button @click="remove(node, data)" circle v-if="node.level !== 1">
+            <el-button @click="remove(data, node)" circle v-if="node.level !== 1">
               <el-icon :size="15">
                 <delete />
               </el-icon>
@@ -20,73 +26,40 @@
       </el-tree>
     </el-col>
     <el-col :span="12">
-      <schema-form :schema="schema" v-model="modelValue"></schema-form>
+      <schema-form :schema="basicSchema" v-model="modelValue.value"></schema-form>
     </el-col>
   </el-row>
 </template>
 <script setup>
-import SchemaForm from '@/components/form/SchemaForm.vue'
-import schema from './BasicSchema'
-import { ref, watch } from "vue";
+import SchemaForm from '@/components/SchemaForm/SchemaForm.vue'
+import basicSchema from './BasicSchema'
+import { schemaToTree } from '@/utils/json-schema'
+import { reactive, computed } from "vue";
 let id = 1000;
 const defaultProps = {
   children: "children",
-  label: "label",
+  label: "meta:ui:title",
 }
-const data = [
-  {
-    id: 1,
-    label: "Level one 1",
-    children: [
-      {
-        id: 3,
-        label: "Level two 2-1",
-        children: [
-          {
-            id: 4,
-            label: "Level three 3-1-1",
-          },
-          {
-            id: 5,
-            label: "Level three 3-1-2",
-            disabled: true,
-          },
-        ],
-      },
-      {
-        id: 2,
-        label: "Level two 2-2",
-        disabled: true,
-        children: [
-          {
-            id: 6,
-            label: "Level three 3-2-1",
-          },
-          {
-            id: 7,
-            label: "Level three 3-2-2",
-            disabled: true,
-          },
-        ],
-      },
-    ],
-  },
-]
+let modelValue = reactive({value:{}})
+const onSelectChange = (data, node) => {
+  modelValue.value = data
+}
+
 const append = (data) => {
-  const newChild = { id: id++, label: "testtest", children: [] };
+  const newChild = { id: id++, "meta:ui:title": "testtest", children: [] };
   if (!data.children) {
     data.children = [];
   }
   data.children.push(newChild);
 }
-const remove = (node, data) => {
+const remove = (data, node) => {
   const parent = node.parent;
   const children = parent.data.children || parent.data;
   const index = children.findIndex((d) => d.id === data.id);
   children.splice(index, 1);
 }
-const modelValue = ref({})
 
+const treeData = computed(() => [schemaToTree(basicSchema)])
 </script>
 <style>
 .el-row {
@@ -105,7 +78,7 @@ const modelValue = ref({})
 .tree-node-text {
   display: inline-block;
   margin-right: 10px;
-  font-size: 1.5em;
+  font-size: 1.2em;
 }
 .el-tree-node__content {
   padding-top: 20px;

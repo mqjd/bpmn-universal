@@ -7,6 +7,7 @@ import * as Icons from '@element-plus/icons-vue'
 import 'element-plus/dist/index.css'
 import App from './App.vue'
 import router from './router'
+import SchemaFields from '@/components/SchemaField'
 
 const app = createApp(App)
 
@@ -17,5 +18,6 @@ for (const iconName in Icons) {
 
 app.use(createPinia())
 app.use(router)
+app.use(SchemaFields)
 
 app.mount('#app')
