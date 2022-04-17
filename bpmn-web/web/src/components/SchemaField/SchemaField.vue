@@ -4,6 +4,7 @@
             :is="schema.type + '-field'"
             :schema="schema"
             :root-schema="rootSchema"
+            @change="onChange"
             v-model="schemaValue"
         />
     </div>
@@ -28,8 +29,8 @@ watch(nativeInputValue, (newValue, oldValue) => {
 })
 const emits = defineEmits([CHANGE_EVENT, UPDATE_MODEL_EVENT])
 
-watch(schemaValue, (newValue, oldValue) => {
-    emits(CHANGE_EVENT, newValue)
-    emits(UPDATE_MODEL_EVENT, newValue)
-})
+const onChange = (value) => {
+    emits(CHANGE_EVENT, value)
+    emits(UPDATE_MODEL_EVENT, value)
+}
 </script>

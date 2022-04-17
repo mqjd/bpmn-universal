@@ -11,7 +11,7 @@
       >
         <template #default="{ node, data }">
           <span class="tree-node-content">
-            <span class="tree-node-text">{{ node.label }}</span>
+            <span class="tree-node-text" :class="{ 'not-valid': data.notValid }">{{ node.label }}</span>
             <span class="tree-node-type" v-if="data.type">{{ data.type.toUpperCase() }}</span>
             <el-button
               @click="append(data, node)"
@@ -22,7 +22,7 @@
                 <circle-plus />
               </el-icon>
             </el-button>
-            <el-button @click="remove(data, node)" circle v-if="node.level !== 1">
+            <el-button @click.stop="remove(data, node)" circle v-if="node.level !== 1">
               <el-icon :size="15">
                 <delete />
               </el-icon>
@@ -32,25 +32,33 @@
       </el-tree>
     </el-col>
     <el-col :span="12">
-      <schema-form :schema="basicSchema" v-model="currentNodeValue" v-if="currentNodeValue"></schema-form>
+      <schema-form
+        :schema="basicSchema"
+        v-model="currentNodeValue"
+        @change="onFormValueChange"
+        v-if="currentNodeValue"
+      ></schema-form>
     </el-col>
   </el-row>
 </template>
 <script setup>
 import basicSchema from './BasicSchema'
-import { schemaToTree } from '@/utils/json-schema'
-import { ref } from "vue";
+import { schemaToTree, createValidater } from '@/utils/json-schema'
+import { ref, nextTick } from "vue";
 let id = 1000;
 const defaultProps = {
   children: "children",
-  label: "meta:ui:title",
+  label: "meta:ui:title"
 }
+const schemaValidater = createValidater(basicSchema)
 let currentNodeValue = ref()
 let currentNode = ref()
 const onSelectChange = (data, node) => {
   currentNodeValue.value = data
   currentNode.value = node
+  validateCurrentNodeValue()
 }
+
 const keys = {}
 const append = (data) => {
   if (!keys[data.id]) {
@@ -60,20 +68,39 @@ const append = (data) => {
   }
   keys[data.id]++
   const id = data.id + '-' + keys[data.id];
-  const newChild = { id: id, "meta:ui:title": "字段" + id, children: [] };
+  const newChild = { id: id, "meta:ui:title": "字段" + id, notValid: true, children: [] };
   if (!data.children) {
     data.children = [];
   }
   data.children.push(newChild);
+  onSchemaChanged();
 }
 const remove = (data, node) => {
   const parent = node.parent;
   const children = parent.data.children || parent.data;
   const index = children.findIndex((d) => d.id === data.id);
   children.splice(index, 1);
-  delete node.parent.data.properties[data.$key];
+  if (currentNodeValue.value && currentNodeValue.value.id === data.id) {
+    currentNodeValue.value = null
+  }
+  onSchemaChanged();
 }
 const treeData = ref([schemaToTree(basicSchema)])
+
+const onFormValueChange = (value) => {
+  nextTick(validateCurrentNodeValue)
+  onSchemaChanged()
+}
+const validateCurrentNodeValue = () => {
+  if ('object' !== currentNodeValue.value.type){
+    currentNodeValue.value.children = []
+  }
+  currentNodeValue.value && (currentNodeValue.value.notValid = !schemaValidater(currentNodeValue.value))
+}
+
+const onSchemaChanged = () => {
+
+}
 </script>
 <style>
 .el-row {
@@ -84,6 +111,10 @@ const treeData = ref([schemaToTree(basicSchema)])
 }
 .is-current > .el-tree-node__content:nth-child(1) {
   background-color: var(--el-tree-node-hover-bg-color);
+}
+.not-valid {
+  border-left: 5px var(--el-color-danger) solid;
+  padding-left: 3px;
 }
 .el-button {
   border: none;
@@ -104,7 +135,7 @@ const treeData = ref([schemaToTree(basicSchema)])
   display: inline-block;
   padding: 2px 8px;
   margin-right: 10px;
-  font-size: .8em;
+  font-size: 0.8em;
   box-shadow: 0 0 0 1px var(--el-input-border-color, var(--el-border-color))
     inset;
   border-radius: var(--el-input-border-radius, var(--el-border-radius-base));

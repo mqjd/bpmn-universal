@@ -11,10 +11,10 @@
     />
 </template>
 <script setup>
-import { UPDATE_MODEL_EVENT } from '@/constants'
+import { CHANGE_EVENT, UPDATE_MODEL_EVENT } from '@/constants'
 import { ref, computed, watch } from "vue";
 
-const emits = defineEmits([UPDATE_MODEL_EVENT])
+const emits = defineEmits([CHANGE_EVENT, UPDATE_MODEL_EVENT])
 const props = defineProps({
     schema: Object,
     modelValue: String | Array
@@ -29,5 +29,6 @@ watch(nativeValue, (newValue, oldValue) => {
 
 watch(stringValue, (newValue, oldValue) => {
     emits(UPDATE_MODEL_EVENT, newValue)
+    emits(CHANGE_EVENT, newValue)
 })
 </script>

@@ -5,10 +5,10 @@
     </el-radio-group>
 </template>
 <script setup>
-import { UPDATE_MODEL_EVENT } from '@/constants'
+import { CHANGE_EVENT, UPDATE_MODEL_EVENT } from '@/constants'
 import { ref, watch, computed } from "vue";
 
-const emits = defineEmits([UPDATE_MODEL_EVENT])
+const emits = defineEmits([CHANGE_EVENT, UPDATE_MODEL_EVENT])
 const props = defineProps({
     schema: Object,
     modelValue: Boolean,
@@ -24,6 +24,7 @@ watch(nativeValue, (newValue, oldValue) => {
 
 watch(booleanValue, (newValue, oldValue) => {
     emits(UPDATE_MODEL_EVENT, newValue)
+    emits(CHANGE_EVENT, newValue)
 })
 
 </script>

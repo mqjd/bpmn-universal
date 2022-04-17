@@ -1,5 +1,10 @@
 <template>
-    <el-form-item v-for="item of properties" :key="item[0]" :label="item[1]['meta:ui:title']">
+    <el-form-item
+        v-for="item of properties"
+        :key="item[0]"
+        :label="item[1]['meta:ui:title']"
+        :prop="item[0]"
+    >
         <schema-field
             :schema="item[1]"
             v-model="objectValue[item[0]]"
@@ -35,13 +40,9 @@ watch(nativeValue, (newValue, oldValue) => {
     objectValue.value = newValue;
 })
 
-watch(objectValue, (newValue, oldValue) => {
-    emits(CHANGE_EVENT, newValue)
-    emits(UPDATE_MODEL_EVENT, newValue)
-})
-
 const onChange = (key, value, schema) => {
-    objectValue[key] = value;
+    emits(CHANGE_EVENT, objectValue.value)
+    emits(UPDATE_MODEL_EVENT, objectValue.value)
 }
 
 const ifValidators = computed(() => {

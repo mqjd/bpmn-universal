@@ -1,12 +1,13 @@
 const basicSchema = {
     "type": "object",
-    "required": ["type", "meta:ui:title"],
+    "required": ["$key", "type", "meta:ui:title"],
     "meta:ui:title": "字段",
     "meta:ui:description": "字段",
     "meta:ui:placeholder": "字段",
     "properties": {
         "$key": {
             "type": "string",
+            "minLength": 1,
             "meta:ui:title": "字段KEY",
             "meta:ui:description": "字段KEY",
             "meta:ui:placeholder": "字段KEY"
@@ -19,6 +20,7 @@ const basicSchema = {
         },
         "meta:ui:title": {
             "type": "string",
+            "minLength": 1,
             "meta:ui:title": "字段名称",
             "meta:ui:description": "字段名称",
             "meta:ui:placeholder": "请输入字段名称"
@@ -66,7 +68,8 @@ const basicSchema = {
                     "type": "array",
                     "uniqueItems": true,
                     "items": {
-                        "type": "string"
+                        "type": "string",
+                        "minLength": 1
                     },
                     "meta:ui:title": "字典",
                     "meta:ui:description": "字符串可选值",
