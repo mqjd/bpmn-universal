@@ -1,7 +1,10 @@
 {
-    "compilerOptions": {
-        "types": [
-            "element-plus/global"
-        ]
-    }
+  "compilerOptions": {
+    "allowJs": true,
+    "jsx": "preserve",
+    "types": ["element-plus/global"]
+  },
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "off"
+  }
 }
