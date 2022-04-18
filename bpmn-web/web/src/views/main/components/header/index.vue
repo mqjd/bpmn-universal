@@ -1,5 +1,5 @@
 <template>
-
+  <div></div>
 </template>
 <script>
 import { mapWritableState } from "pinia";
@@ -15,8 +15,8 @@ export default defineComponent({
   computed: {
     ...mapWritableState(useMenuStore, ["collapsed"]),
     toggleIcon() {
-      return this.collapsed ? "fold" : "expand"
-    }
+      return this.collapsed ? "fold" : "expand";
+    },
   },
   methods: {
     toggleSideMenu() {
@@ -26,6 +26,4 @@ export default defineComponent({
 });
 </script>
 
-<style>
-
-</style>
+<style></style>

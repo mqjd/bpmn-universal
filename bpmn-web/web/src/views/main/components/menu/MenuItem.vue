@@ -18,7 +18,9 @@
       <component :is="item.meta.icon" />
     </el-icon>
     <template #title>
-      <router-link class="link" :to="resolvePath(item.path)">{{ item.meta.title }}</router-link>
+      <router-link class="link" :to="resolvePath(item.path)">{{
+        item.meta.title
+      }}</router-link>
     </template>
   </el-menu-item>
 </template>
@@ -43,7 +45,7 @@ export default defineComponent({
   methods: {
     resolvePath(routePath) {
       if (this.item.children) {
-        return (this.basePath + "/" + routePath).replace(/\/{2,}/, '/')
+        return (this.basePath + "/" + routePath).replace(/\/{2,}/, "/");
       } else {
         return this.basePath;
       }

@@ -1,6 +1,11 @@
 <template>
   <el-menu :collapse="collapsed">
-    <menu-item v-for="item of avalibleMenus" :key="item.name" :base-path="item.path" :item="item"></menu-item>
+    <menu-item
+      v-for="item of avalibleMenus"
+      :key="item.name"
+      :base-path="item.path"
+      :item="item"
+    ></menu-item>
   </el-menu>
   <button class="toggle" @click="toggleSideMenu()">
     <el-icon size="2em">
@@ -27,8 +32,8 @@ export default defineComponent({
   computed: {
     ...mapWritableState(useMenuStore, ["avalibleMenus", "collapsed"]),
     toggleIcon() {
-      return this.collapsed ? "fold" : "expand"
-    }
+      return this.collapsed ? "fold" : "expand";
+    },
   },
   methods: {
     toggleSideMenu() {

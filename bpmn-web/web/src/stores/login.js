@@ -1,10 +1,10 @@
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia";
 
-export const useLoginStore = defineStore('loginStore', {
-    state: () => {
-        return {
-            token: null,
-            userInfo: null
-        }
-    }
-})
+export const useLoginStore = defineStore("loginStore", {
+  state: () => {
+    return {
+      token: null,
+      userInfo: null,
+    };
+  },
+});

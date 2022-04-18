@@ -24,7 +24,7 @@ export default defineComponent({
   components: {
     MainHeader,
     MainMenu,
-    RouterView
+    RouterView,
   },
   computed: {
     ...mapWritableState(useMenuStore, ["collapsed"]),

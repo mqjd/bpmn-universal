@@ -4,18 +4,18 @@
 </template>
 
 <script setup>
-import StringField from './StringField.vue'
+import StringField from "./StringField.vue";
 import { ref, reactive } from "vue";
 const schema = reactive({
   "meta:ui:title": "字段名称",
   "meta:ui:description": "字段名称",
   "meta:ui:placeholder": "请输入字段名称",
-})
-const model = ref('asd')
+});
+const model = ref("asd");
 const onClick = () => {
-  console.log(model.value)
-}
+  console.log(model.value);
+};
 const onA = (value) => {
-  model.value = value
-}
+  model.value = value;
+};
 </script>
