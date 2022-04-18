@@ -1,8 +1,9 @@
-import SchemaForm from "./SchemaForm.vue"
+import SchemaForm from "./SchemaForm.vue";
 
 const Components = {
-    install(app) {
-        app.component('SchemaForm', SchemaForm);
-    }
-}
-export default Components
+  install(app) {
+    app.component("SchemaForm", SchemaForm);
+  },
+};
+
+export default Components;
