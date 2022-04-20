@@ -1,0 +1,1 @@
+import{_ as t,r as o,o as a,e as r,w as c,p as n}from"./index.a5a61868.js";const s={},_=n("DataSource");function p(u,f){const e=o("el-button");return a(),r(e,{type:"primary"},{default:c(()=>[_]),_:1})}var d=t(s,[["render",p]]);export{d as default};

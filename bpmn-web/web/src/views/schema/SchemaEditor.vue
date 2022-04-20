@@ -36,9 +36,14 @@
 <script setup>
 import basicSchema from "./BasicSchema";
 import SchemaNode from "./SchemaNode.vue";
-import { dragEventsKey } from "element-plus/lib/components/tree/src/model/useDragNode";
-import { schemaToTree, createValidater } from "@/utils/json-schema";
-import { ref, nextTick, computed } from "vue";
+import {
+  schemaToTree,
+  createValidater,
+  treeToSchema,
+} from "@/utils/json-schema";
+import { CHANGE_EVENT, UPDATE_MODEL_EVENT } from "@/constants";
+import { ref, nextTick, computed, watch } from "vue";
+const emits = defineEmits([CHANGE_EVENT, UPDATE_MODEL_EVENT]);
 const defaultProps = {
   children: "children",
   label: "meta:ui:title",
@@ -67,10 +72,18 @@ const hasChildren = (type) => {
 
 const nativeSchema = computed(() => props.schema);
 const schemaValue = ref(nativeSchema.value);
-
 const schemaValidater = createValidater(basicSchema);
 let currentNodeValue = ref();
 let currentNode = ref();
+
+watch(nativeSchema, (newValue, oldValue) => {
+  schemaValue.value = newValue;
+  currentNodeValue.value = null;
+  currentNode.value = null;
+});
+
+const treeData = computed(() => [schemaToTree(schemaValue.value)]);
+
 const onSelectChange = (data, node) => {
   currentNodeValue.value = data;
   currentNode.value = node;
@@ -110,7 +123,6 @@ const remove = (data, node) => {
   validateNodeValue(parent.data);
   onSchemaChanged();
 };
-const treeData = ref([schemaToTree(schemaValue.value)]);
 
 const onFormValueChange = (value) => {
   nextTick(() => validateNodeValue(value));
@@ -119,24 +131,30 @@ const onFormValueChange = (value) => {
 const validateNodeValue = (data) => {
   if (!hasChildren(data.type)) {
     data.children = [];
-    data.notValid = !schemaValidater(data);
-  } else {
-    if (data.children.length === 0) {
-      data.notValid = true;
-    } else {
-      data.notValid = !schemaValidater(data);
-    }
   }
+  data.notValid = !schemaValidater(data);
 };
 
-const onSchemaChanged = () => {};
+const onSchemaChanged = () => {
+  const schema = treeToSchema(treeData.value);
+  emits(UPDATE_MODEL_EVENT, schema);
+  emits(CHANGE_EVENT, schema);
+};
 const allowDrag = (node) => {
   return node.level !== 1;
 };
 const allowDrop = (draggingNode, dropNode, type) => {
-  return type === "inner"
-    ? hasChildren(dropNode.data.type)
-    : dropNode.level !== 1;
+  if ("inner" === type) {
+    const schemaNodeType = dropNode.data.type;
+    if ("object" === schemaNodeType) {
+      return true;
+    } else if ("array" === schemaNodeType) {
+      return dropNode.data.children.length < 1;
+    } else {
+      return false;
+    }
+  }
+  return dropNode.level !== 1 && "array" !== dropNode.parent.data.type;
 };
 </script>
 <style>
@@ -149,7 +167,7 @@ const allowDrop = (draggingNode, dropNode, type) => {
 }
 
 .is-current > .el-tree-node__content:nth-child(1) {
-  background-color: var(--el-tree-node-hover-bg-color);
+  background-color: var(--el-fill-color);
 }
 
 .not-valid > .el-tree-node__content:nth-child(1) {

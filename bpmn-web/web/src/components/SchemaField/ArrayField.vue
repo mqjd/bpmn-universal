@@ -48,9 +48,6 @@ const arrayValues = ref(nativeValue.value);
 watch(nativeValue, (newValue, oldValue) => {
   arrayValues.value = newValue;
 });
-watch(arrayValues, (newValue, oldValue) => {
-  emits(UPDATE_MODEL_EVENT, newValue);
-});
 
 const appendItem = (index) => {
   arrayValues.value.splice(index + 1, 0, null);
@@ -74,7 +71,11 @@ const onItemChange = (value, index) => {
   margin-bottom: 2px;
 }
 .schema-field {
+  flex: 1;
   display: inline-block;
   margin-right: 1em;
+}
+.schema-field > div {
+  width: 100%;
 }
 </style>

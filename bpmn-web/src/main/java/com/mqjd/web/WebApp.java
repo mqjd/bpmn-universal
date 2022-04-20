@@ -6,12 +6,19 @@ import com.mqjd.web.util.ClassPathScanner;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.StaticHandler;
+import io.vertx.jdbcclient.JDBCPool;
+import io.vertx.sqlclient.Pool;
+import io.vertx.sqlclient.Row;
+
+import java.util.List;
 
 public class WebApp extends AbstractVerticle {
+
     public static void main(String[] args) {
         Vertx vertx = Vertx.vertx();
         WebApp webApp = new WebApp();
@@ -20,11 +27,18 @@ public class WebApp extends AbstractVerticle {
 
     @Override
     public void start() {
-        Vertx vertx = Vertx.vertx();
+        Pool pool = JDBCPool.pool(vertx, new JsonObject().put("url", "jdbc:sqlite:bpmn.db"));
+        pool.query("create table if not exits test(id int primary key, name varchar(255))").execute()
+            .compose(r -> pool.query("insert into test values (1, 'Hello'), (2, 'World')").execute())
+            .compose(r -> pool.query("select * " + "from test").execute().onSuccess(rows -> {
+                for (Row row : rows) {
+                    System.out.println(row.toJson());
+                }
+            })).onFailure(Throwable::printStackTrace);
         Router router = Router.router(vertx);
-        for (Class<? extends Handler<RoutingContext>> handlerClass :
-                ClassPathScanner.scanAllHandlers(
-                        "com.mqjd.web.handler", new AnnotationFilter(RestHandler.class))) {
+        List<? extends Class<? extends Handler<RoutingContext>>> handlers = ClassPathScanner.scanAllHandlers(
+                "com.mqjd.web.handler", new AnnotationFilter(RestHandler.class));
+        for (Class<? extends Handler<RoutingContext>> handlerClass : handlers) {
             RestHandler restHandler = handlerClass.getAnnotation(RestHandler.class);
             Route route = router.route(restHandler.method().getHttpMethod(), restHandler.value());
             Handler<RoutingContext> handler = createNewHandler(handlerClass);
@@ -35,13 +49,8 @@ public class WebApp extends AbstractVerticle {
             }
         }
         router.route("/*").handler(StaticHandler.create());
-        vertx.createHttpServer()
-                .requestHandler(router)
-                .listen(8000)
-                .onSuccess(
-                        server ->
-                                System.out.println(
-                                        "HTTP server started on port " + server.actualPort()));
+        vertx.createHttpServer().requestHandler(router).listen(8000)
+             .onSuccess(server -> System.out.println("HTTP " + "server started on port " + server.actualPort()));
     }
 
     private Handler<RoutingContext> createNewHandler(Class<? extends Handler<RoutingContext>> clz) {

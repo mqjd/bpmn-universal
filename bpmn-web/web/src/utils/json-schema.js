@@ -12,6 +12,7 @@ const keywords = {
       title: "field title",
       description: "field description",
       placeholder: "field placeholder",
+      visible: "field visible",
     },
   },
 };
@@ -67,6 +68,7 @@ export const tileSchema = (schema, root) => {
   if (isArray(schema)) {
     return schema.map((v) => tileSchema(v, root));
   } else if (isObject(schema)) {
+    // eslint-disable-next-line no-prototype-builtins
     if (schema.hasOwnProperty("$ref")) {
       const refValue = getRefSchema(schema["$ref"], root);
       const { $ref, ...others } = schema;
@@ -85,6 +87,7 @@ export const tileSchema = (schema, root) => {
 };
 
 export const tileSchemaOnlyDefs = (schema) => {
+  // eslint-disable-next-line no-prototype-builtins
   if (schema.hasOwnProperty("$defs")) {
     const { $defs, ...others } = schema;
     return { $defs: tileSchema($defs, schema), ...others };
@@ -122,3 +125,20 @@ export const schemaToTree = (schema) => {
   schema.id = "1";
   return schemaToTreeNode(tileSchemaRef(schema));
 };
+
+const treeNodeToSchema = (treeNode) => {
+  const { $key, type, children, notValid, ...others } = treeNode;
+  if ("object" === type) {
+    const properties = Object.fromEntries(
+      children.map((node) => [node.$key, treeNodeToSchema(node)])
+    );
+    return { properties, type, ...others };
+  } else if ("array" === type) {
+    const items = children.length === 1 ? treeNodeToSchema(children[0]) : {};
+    return { items, type, ...others };
+  } else {
+    return { type, ...others };
+  }
+};
+
+export const treeToSchema = (tree) => treeNodeToSchema(tree[0]);

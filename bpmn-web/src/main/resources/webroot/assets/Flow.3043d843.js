@@ -1,0 +1,1 @@
+import{_ as t,r as o,o as r,e as n,w as a,p as c}from"./index.a5a61868.js";const s={},_=c("Flow");function l(p,f){const e=o("el-button");return r(),n(e,{type:"primary"},{default:a(()=>[_]),_:1})}var i=t(s,[["render",l]]);export{i as default};

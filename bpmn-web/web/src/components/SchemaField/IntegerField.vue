@@ -29,7 +29,9 @@ watch(nativeValue, (newValue, oldValue) => {
 });
 
 watch(numberValue, (newValue, oldValue) => {
-  emits(UPDATE_MODEL_EVENT, newValue);
-  emits(CHANGE_EVENT, newValue);
+  if (newValue !== nativeValue.value) {
+    emits(UPDATE_MODEL_EVENT, newValue);
+    emits(CHANGE_EVENT, newValue);
+  }
 });
 </script>

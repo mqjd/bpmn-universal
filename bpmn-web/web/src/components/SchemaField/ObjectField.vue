@@ -59,7 +59,9 @@ const ifProperties = computed(() => {
   var validators = ifValidators.value;
   for (let i = 0; i < validators.length; i++) {
     if (validators[i][0](objectValue.value)) {
-      return Object.entries(validators[i][1].properties);
+      return Object.entries(validators[i][1].properties).filter(
+        (v) => v[1]["meta:ui:visible"] !== false
+      );
     }
   }
   return [];
