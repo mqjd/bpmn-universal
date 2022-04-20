@@ -96,6 +96,7 @@
                             <goal>npm</goal>
                         </goals>
                         <configuration>
+                            <!--suppress UnresolvedMavenProperty -->
                             <arguments>ci --cache-max=0 --no-save ${npm.proxy}</arguments>
                             <environmentVariables>
                                 <HUSKY_SKIP_INSTALL>true</HUSKY_SKIP_INSTALL>
