@@ -3,7 +3,7 @@
     <el-header>
       <main-header />
     </el-header>
-    <el-container>
+    <el-container class="main-container">
       <el-aside width="auto">
         <main-menu></main-menu>
       </el-aside>
@@ -40,5 +40,8 @@ export default defineComponent({
 }
 .el-aside {
   border-right: solid 1px var(--el-border-color);
+}
+.main-container {
+  height: calc(100% - 60px);
 }
 </style>

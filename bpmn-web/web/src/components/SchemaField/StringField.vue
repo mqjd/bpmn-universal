@@ -17,6 +17,7 @@
     :maxLength="schema.maxLength"
     :minLength="schema.minLength"
     :placeholder="schema.placeholder"
+    clearable
     v-else
   />
 </template>

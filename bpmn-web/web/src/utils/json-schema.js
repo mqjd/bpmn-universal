@@ -94,8 +94,8 @@ export const tileSchemaOnlyDefs = (schema) => {
 
 export const tileSchemaRef = (schema) => tileSchema(schema, schema);
 
-const schemaToTreeNode = (schema, root) => {
-  const { properties, items, id } = schema;
+const schemaToTreeNode = (schema) => {
+  const { properties, items, id, ...others } = schema;
   if (schema.type === "object") {
     const children = Object.entries(properties || {}).map((v, index) => {
       return {
@@ -104,7 +104,7 @@ const schemaToTreeNode = (schema, root) => {
         ...schemaToTreeNode(v[1]),
       };
     });
-    schema.children = children;
+    return { id, children, ...others };
   } else if (schema.type === "array") {
     const children = [
       {
@@ -113,12 +113,12 @@ const schemaToTreeNode = (schema, root) => {
         ...items,
       },
     ];
+    return { id, children, ...others };
   }
-
   return schema;
 };
 
 export const schemaToTree = (schema) => {
   schema.id = "1";
-  return schemaToTreeNode(tileSchema(schema, schema));
+  return schemaToTreeNode(tileSchemaRef(schema));
 };

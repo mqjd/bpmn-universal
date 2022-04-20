@@ -45,6 +45,8 @@ watch(nativeValue, (newValue, oldValue) => {
 });
 
 const modelSchema = tileSchemaOnlyDefs(props.schema);
+
+// TODO schema to from validator
 const rules = computed(() =>
   Object.fromEntries(
     props.schema.required.map((key) => {

@@ -8,6 +8,7 @@ const basicSchema = {
     $key: {
       type: "string",
       minLength: 1,
+      pattern: "^[a-zA-Z]\\w{0,15}$",
       "meta:ui:title": "字段KEY",
       "meta:ui:description": "字段KEY",
       "meta:ui:placeholder": "字段KEY",
@@ -179,7 +180,7 @@ const basicSchema = {
             type: "integer",
             minimum: -1,
             "meta:ui:title": "小数位数",
-            "meta:ui:description": "小数位数)",
+            "meta:ui:description": "小数位数",
             "meta:ui:placeholder": "小数位数",
           },
           multipleOf: {
@@ -238,7 +239,6 @@ const basicSchema = {
         properties: { type: { const: "array" } },
       },
       then: {
-        required: ["items"],
         properties: {
           maxItems: {
             $ref: "#/$defs/nonNegativeInteger",

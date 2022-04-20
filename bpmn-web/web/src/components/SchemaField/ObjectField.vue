@@ -29,7 +29,7 @@ const props = defineProps({
   },
   modelValue: {
     type: Object,
-    default: {},
+    default: () => {},
   },
 });
 
@@ -82,3 +82,9 @@ const properties = computed(() => {
     .map((v) => [v[0], tileSchema(v[1], props.rootSchema)]);
 });
 </script>
+<style>
+.el-form-item__content > div,
+.el-form-item__content > div > div {
+  width: 100%;
+}
+</style>
