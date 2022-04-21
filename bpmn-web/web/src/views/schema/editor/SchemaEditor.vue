@@ -34,7 +34,7 @@
   </el-row>
 </template>
 <script setup>
-import basicSchema from "./BasicSchema";
+import basicSchema from "./schema";
 import SchemaNode from "./SchemaNode.vue";
 import {
   schemaToTree,

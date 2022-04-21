@@ -1,24 +1,7 @@
 <template>
-  <el-dialog v-model="dialogVisible" fullscreen>
-    <template #title>
-      <div class="dialog-header">
-        <el-icon color="var(--el-color-success)">
-          <circle-plus />
-        </el-icon>
-        <span style="margin-left: 10px">Schema</span>
-      </div>
-    </template>
-    <schema-editor></schema-editor>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="dialogVisible = false"
-          >Confirm</el-button
-        >
-      </span>
-    </template>
-  </el-dialog>
-  <el-button icon="Plus" circle @click="dialogVisible = true" />
+  <schema-editor-dialog v-model:visible="editorSchemaDialogVisible" />
+  <el-button icon="Plus" circle @click="editorSchemaDialogVisible = true" />
+  <el-button icon="Edit" circle @click="editorSchemaDialogVisible = true" />
   <el-table
     v-loading="loading"
     height="calc(100% - 50px)"
@@ -47,7 +30,7 @@
 </template>
 <script setup>
 import { ref } from "vue";
-import SchemaEditor from "./SchemaEditor.vue";
+import SchemaEditorDialog from "./editor/SchemaEditorDialog.vue";
 const tableData = new Array(100).fill({
   date: "2016-05-03",
   name: "Tom",
@@ -56,7 +39,8 @@ const tableData = new Array(100).fill({
 const pageSize = ref(100);
 const currentPage = ref(1);
 const loading = ref(true);
-const dialogVisible = ref(false);
+const editorSchemaDialogVisible = ref(false);
+const editorSchema = ref({});
 setTimeout(() => {
   loading.value = false;
 }, 800);
