@@ -54,7 +54,7 @@ const defaultProps = {
   },
 };
 const props = defineProps({
-  schema: {
+  modelValue: {
     type: Object,
     default: () => {
       return {
@@ -70,7 +70,7 @@ const hasChildren = (type) => {
   return type === "object" || type === "array";
 };
 
-const nativeSchema = computed(() => props.schema);
+const nativeSchema = computed(() => props.modelValue);
 const schemaValue = ref(nativeSchema.value);
 const schemaValidater = createValidater(basicSchema);
 let currentNodeValue = ref();
@@ -135,10 +135,24 @@ const validateNodeValue = (data) => {
   data.notValid = !schemaValidater(data);
 };
 
+const hasInValidNode = (nodes) => {
+  for (let i = 0; i < nodes.length; i++) {
+    if (nodes[i].notValid) {
+      return true;
+    }
+    if (nodes[i].children.length !== 0 && hasInValidNode(nodes[i].children)) {
+      return true;
+    }
+  }
+  return false;
+};
+
 const onSchemaChanged = () => {
-  const schema = treeToSchema(treeData.value);
-  emits(UPDATE_MODEL_EVENT, schema);
-  emits(CHANGE_EVENT, schema);
+  if (!hasInValidNode(treeData.value)) {
+    const schema = treeToSchema(treeData.value);
+    emits(UPDATE_MODEL_EVENT, schema);
+    emits(CHANGE_EVENT, schema);
+  }
 };
 const allowDrag = (node) => {
   return node.level !== 1;

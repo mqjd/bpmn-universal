@@ -1,7 +1,36 @@
 <template>
-  <schema-editor-dialog v-model:visible="editorSchemaDialogVisible" />
+  <schema-editor-dialog
+    v-model:visible="editorSchemaDialogVisible"
+    v-model="schema"
+    :onSave="
+      () => {
+        editorSchemaDialogVisible = false;
+      }
+    "
+    :onCancel="
+      () => {
+        editorSchemaDialogVisible = false;
+      }
+    "
+    v-if="editorSchemaDialogVisible"
+  />
+  <schema-transform-dialog
+    v-model:visible="transformSchemaDialogVisible"
+    v-model="schema"
+    :onSave="
+      () => {
+        transformSchemaDialogVisible = false;
+      }
+    "
+    :onCancel="
+      () => {
+        transformSchemaDialogVisible = false;
+      }
+    "
+    v-if="transformSchemaDialogVisible"
+  />
   <el-button icon="Plus" circle @click="editorSchemaDialogVisible = true" />
-  <el-button icon="Edit" circle @click="editorSchemaDialogVisible = true" />
+  <el-button icon="Edit" circle @click="transformSchemaDialogVisible = true" />
   <el-table
     v-loading="loading"
     height="calc(100% - 50px)"
@@ -31,6 +60,7 @@
 <script setup>
 import { ref } from "vue";
 import SchemaEditorDialog from "./editor/SchemaEditorDialog.vue";
+import SchemaTransformDialog from "./transform/SchemaTransformDialog.vue";
 const tableData = new Array(100).fill({
   date: "2016-05-03",
   name: "Tom",
@@ -40,7 +70,13 @@ const pageSize = ref(100);
 const currentPage = ref(1);
 const loading = ref(true);
 const editorSchemaDialogVisible = ref(false);
-const editorSchema = ref({});
+const transformSchemaDialogVisible = ref(false);
+const schema = ref();
+
+const closeditorDialog = () => {
+  editorSchemaDialogVisible.value = false;
+};
+
 setTimeout(() => {
   loading.value = false;
 }, 800);

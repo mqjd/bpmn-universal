@@ -8,7 +8,7 @@
         <span style="margin-left: 10px">Schema</span>
       </div>
     </template>
-    <schema-editor v-model="modelValue" />
+    <schema-transform v-model="modelValue" />
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="onSave">Cancel</el-button>
@@ -18,7 +18,7 @@
   </el-dialog>
 </template>
 <script setup>
-import SchemaEditor from "./SchemaEditor.vue";
+import SchemaTransform from "./SchemaTransform.vue";
 import { CHANGE_EVENT, UPDATE_MODEL_EVENT } from "@/constants";
 import { computed, ref, watch } from "vue";
 const emits = defineEmits([UPDATE_MODEL_EVENT]);
