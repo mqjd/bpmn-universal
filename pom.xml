@@ -13,6 +13,7 @@
         <module>bpmn-activiti</module>
         <module>bpmn-datamodel</module>
         <module>bpmn-web</module>
+        <module>bpmn-test</module>
     </modules>
 
     <name>bpmn-universal</name>
