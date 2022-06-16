@@ -132,12 +132,12 @@ const treeNodeToSchema = (treeNode) => {
     const properties = Object.fromEntries(
       children.map((node) => [node.$key, treeNodeToSchema(node)])
     );
-    return { properties, type, ...others };
+    return { properties, type, $key, ...others };
   } else if ("array" === type) {
     const items = children.length === 1 ? treeNodeToSchema(children[0]) : {};
-    return { items, type, ...others };
+    return { items, type, $key, ...others };
   } else {
-    return { type, ...others };
+    return { type, $key, ...others };
   }
 };
 

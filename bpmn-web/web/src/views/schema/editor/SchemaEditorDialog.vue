@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="visible" fullscreen>
-    <template #title>
+    <template #header>
       <div class="dialog-header">
         <el-icon color="var(--el-color-success)">
           <circle-plus />

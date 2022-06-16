@@ -125,8 +125,9 @@ const remove = (data, node) => {
 };
 
 const onFormValueChange = (value) => {
-  nextTick(() => validateNodeValue(value));
-  onSchemaChanged();
+  nextTick(() => {
+    validateNodeValue(value);
+  });
 };
 const validateNodeValue = (data) => {
   if (!hasChildren(data.type)) {
@@ -140,7 +141,11 @@ const hasInValidNode = (nodes) => {
     if (nodes[i].notValid) {
       return true;
     }
-    if (nodes[i].children.length !== 0 && hasInValidNode(nodes[i].children)) {
+    if (
+      nodes[i].children &&
+      nodes[i].children.length !== 0 &&
+      hasInValidNode(nodes[i].children)
+    ) {
       return true;
     }
   }
