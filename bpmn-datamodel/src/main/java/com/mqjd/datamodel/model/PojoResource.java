@@ -30,7 +30,7 @@ public class PojoResource implements Resource {
             String code = stringWriter.toString();
             return new ByteArrayInputStream(code.getBytes(StandardCharsets.UTF_8));
         } catch (TemplateException e) {
-            LOG.error("process template failed: {}", pojo);
+            LOG.error("process template failed: pojo: {}", pojo);
             throw new IllegalArgumentException("process template failed", e);
         }
     }

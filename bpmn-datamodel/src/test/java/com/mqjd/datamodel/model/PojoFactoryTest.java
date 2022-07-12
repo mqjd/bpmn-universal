@@ -35,6 +35,7 @@ public class PojoFactoryTest {
         BasicField basicField =
                 SchemaFactory.createSchema(getClass().getResourceAsStream("/model/object1.json"));
         Assert.assertTrue(basicField instanceof ObjectField);
+        ((ObjectField) basicField).setRequired(new String[] {"properties", "required"});
         Schema schema = JsonUtils.fromJson(JsonUtils.toJson(basicField), Schema.class);
         pojoConfig.setSchema(schema);
         Class<?> aClass = PojoFactory.createPojo(pojoConfig, this.getClass().getClassLoader());

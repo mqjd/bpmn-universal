@@ -1,5 +1,7 @@
 package com.mqjd.datamodel.model;
 
+import com.mqjd.datamodel.field.BasicField;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +9,7 @@ public class Field {
     private String name;
     private String type;
     private String fullType;
+    private BasicField field;
     private List<String> imports;
 
     public String getName() {
@@ -45,18 +48,32 @@ public class Field {
         this.fullType = fullType;
     }
 
+    public BasicField getField() {
+        return field;
+    }
+
+    public void setField(BasicField field) {
+        this.field = field;
+    }
+
     public static FieldBuilder newFieldBuilder() {
         return new FieldBuilder();
     }
 
-    public static final class FieldBuilder {
+    public static class FieldBuilder {
         private String name;
         private String type;
         private String fullType;
+        private BasicField field;
         private final List<String> imports = new ArrayList<>();
 
         public FieldBuilder name(String name) {
             this.name = name;
+            return this;
+        }
+
+        public FieldBuilder field(BasicField field) {
+            this.field = field;
             return this;
         }
 
@@ -80,6 +97,7 @@ public class Field {
             field.setName(name);
             field.setType(type);
             field.setFullType(fullType);
+            field.setField(this.field);
             field.setImports(imports);
             return field;
         }

@@ -17,6 +17,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class PojoFactory {
@@ -76,6 +77,7 @@ public class PojoFactory {
         builder.packageName(config.getPackageName());
         builder.type(config.getPackageName() + "." + config.currentClassName());
         builder.name(name);
+        builder.field(basicField);
         ObjectField objectField = (ObjectField) basicField;
         objectField.getProperties().forEach((k, v) -> builder.addField(buildField(k, v, config)));
         return builder.build();
@@ -87,14 +89,16 @@ public class PojoFactory {
             if (isPojoType(basicField)) {
                 return buildPojo(fieldName, basicField, config);
             } else {
-                Field.FieldBuilder builder = Field.newFieldBuilder().name(fieldName);
-                builder.type(
-                        String.format(
-                                "%s<%s,%s>",
-                                Map.class.getName(),
-                                String.class.getName(),
-                                Object.class.getName()));
-                return builder.build();
+                return Field.newFieldBuilder()
+                        .name(fieldName)
+                        .field(basicField)
+                        .type(
+                                String.format(
+                                        "%s<%s,%s>",
+                                        Map.class.getName(),
+                                        String.class.getName(),
+                                        Object.class.getName()))
+                        .build();
             }
         } else if (BasicType.ARRAY == type) {
             ArrayField arrayField = (ArrayField) basicField;
@@ -105,13 +109,15 @@ public class PojoFactory {
                 builder.addField(pojo);
                 return builder.build();
             } else {
-                Field.FieldBuilder builder = Field.newFieldBuilder().name(fieldName);
-                builder.type(
-                        String.format(
-                                "%s<%s>",
-                                List.class.getName(),
-                                getJavaType(arrayField.getItems().getType())));
-                return builder.build();
+                return Field.newFieldBuilder()
+                        .name(fieldName)
+                        .field(basicField)
+                        .type(
+                                String.format(
+                                        "%s<%s>",
+                                        List.class.getName(),
+                                        getJavaType(arrayField.getItems().getType())))
+                        .build();
             }
         } else {
             Field.FieldBuilder builder = Field.newFieldBuilder().name(fieldName);

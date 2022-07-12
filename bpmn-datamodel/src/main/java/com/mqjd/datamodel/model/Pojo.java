@@ -1,5 +1,7 @@
 package com.mqjd.datamodel.model;
 
+import com.mqjd.datamodel.field.BasicField;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,13 +43,14 @@ public class Pojo extends Field {
         return new PojoBuilder();
     }
 
-    public static final class PojoBuilder {
+    public static final class PojoBuilder extends  FieldBuilder{
         private String name;
         private String type;
         private final List<String> imports = new ArrayList<>();
         private String className;
         private String packageName;
         private String fullType;
+        private BasicField field;
         private final List<Field> fields = new ArrayList<>();
 
         public PojoBuilder name(String name) {
@@ -57,6 +60,11 @@ public class Pojo extends Field {
 
         public PojoBuilder type(String type) {
             this.type = type;
+            return this;
+        }
+
+        public PojoBuilder field(BasicField field) {
+            this.field = field;
             return this;
         }
 
@@ -93,6 +101,7 @@ public class Pojo extends Field {
             pojo.setImports(imports);
             pojo.setClassName(className);
             pojo.setPackageName(packageName);
+            pojo.setField(field);
             pojo.setFields(fields);
             return pojo;
         }
