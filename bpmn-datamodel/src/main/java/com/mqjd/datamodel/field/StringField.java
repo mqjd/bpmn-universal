@@ -2,7 +2,7 @@ package com.mqjd.datamodel.field;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class StringField extends BasicField {
@@ -13,7 +13,7 @@ public class StringField extends BasicField {
     private String format;
 
     @JsonProperty("enum")
-    private String[] enums;
+    private List<String> enums;
 
     @JsonProperty("default")
     private String defaultValue;
@@ -63,39 +63,31 @@ public class StringField extends BasicField {
         this.format = format;
     }
 
-    public String[] getEnums() {
+    public List<String> getEnums() {
         return enums;
     }
 
-    public void setEnums(String[] enums) {
+    public void setEnums(List<String> enums) {
         this.enums = enums;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof StringField)) return false;
-        if (!super.equals(o)) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
         StringField that = (StringField) o;
-        return Objects.equals(getMinLength(), that.getMinLength())
-                && Objects.equals(getMaxLength(), that.getMaxLength())
-                && Objects.equals(getPattern(), that.getPattern())
-                && Objects.equals(getFormat(), that.getFormat())
-                && Arrays.equals(getEnums(), that.getEnums())
-                && Objects.equals(getDefaultValue(), that.getDefaultValue());
+        return Objects.equals(minLength, that.minLength) && Objects.equals(maxLength, that.maxLength) && Objects.equals(
+                pattern, that.pattern) && Objects.equals(format, that.format) && Objects.equals(enums,
+                                                                                                that.enums
+        ) && Objects.equals(defaultValue, that.defaultValue);
     }
 
     @Override
     public int hashCode() {
-        int result =
-                Objects.hash(
-                        super.hashCode(),
-                        getMinLength(),
-                        getMaxLength(),
-                        getPattern(),
-                        getFormat(),
-                        getDefaultValue());
-        result = 31 * result + Arrays.hashCode(getEnums());
-        return result;
+        return Objects.hash(super.hashCode(), minLength, maxLength, pattern, format, enums, defaultValue);
     }
 }

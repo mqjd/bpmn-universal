@@ -10,7 +10,7 @@ public class StringFieldTest {
     @Test
     public void fromJson() {
         StringField stringField =
-                JsonUtils.fromJson(
+                JsonUtils.jsonToObject(
                         getClass().getResourceAsStream("/field/string1.json"), StringField.class);
         assertEquals("test_string", stringField.getTitle());
         System.out.println(JsonUtils.toJson(stringField));

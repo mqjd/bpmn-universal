@@ -8,7 +8,8 @@
   },
   "properties": {
     "street_address": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     },
     "city": {
       "type": "string"

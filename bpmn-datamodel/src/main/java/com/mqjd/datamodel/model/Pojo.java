@@ -50,7 +50,7 @@ public class Pojo extends Field {
         private String className;
         private String packageName;
         private String fullType;
-        private BasicField field;
+        private BasicField schema;
         private final List<Field> fields = new ArrayList<>();
 
         public PojoBuilder name(String name) {
@@ -63,8 +63,8 @@ public class Pojo extends Field {
             return this;
         }
 
-        public PojoBuilder field(BasicField field) {
-            this.field = field;
+        public PojoBuilder schema(BasicField schema) {
+            this.schema = schema;
             return this;
         }
 
@@ -101,7 +101,7 @@ public class Pojo extends Field {
             pojo.setImports(imports);
             pojo.setClassName(className);
             pojo.setPackageName(packageName);
-            pojo.setField(field);
+            pojo.setSchema(schema);
             pojo.setFields(fields);
             return pojo;
         }

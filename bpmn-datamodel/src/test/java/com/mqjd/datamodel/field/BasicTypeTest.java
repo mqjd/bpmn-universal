@@ -9,7 +9,7 @@ public class BasicTypeTest {
 
     @Test
     public void fromJson() {
-        BasicType basicType = JsonUtils.fromJson("\"string\"", BasicType.class);
+        BasicType basicType = JsonUtils.jsonToObject("\"string\"", BasicType.class);
         assertEquals(BasicType.STRING, basicType);
     }
 }

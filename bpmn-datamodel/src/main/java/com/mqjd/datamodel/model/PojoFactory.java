@@ -17,7 +17,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class PojoFactory {
@@ -29,22 +28,16 @@ public class PojoFactory {
         cfg.setClassForTemplateLoading(PojoFactory.class, "/template");
     }
 
-    public static <T> Class<T> genPojo(PojoConfig config, ClassLoader classLoader) {
-        Pojo pojo = buildPojo(null, config.getSchema(), config);
-        List<Pojo> pojoFields = split(pojo);
-        pojoFields.add(0, pojo);
-
-        return null;
-    }
-
     public static <T> Class<T> createPojo(PojoConfig config, ClassLoader classLoader) {
         Pojo pojo = buildPojo(null, config.getSchema(), config);
         List<Pojo> pojoFields = split(pojo);
         pojoFields.add(0, pojo);
         Template template = getPojoTemplate();
-        JavaSourceClassLoader sourceClassLoader =
-                new JavaSourceClassLoader(
-                        classLoader, new PojoResourceFinder(pojoFields, template), null);
+        JavaSourceClassLoader sourceClassLoader = new JavaSourceClassLoader(classLoader,
+                                                                            new PojoResourceFinder(pojoFields,
+                                                                                                   template
+                                                                            ), null
+        );
         return getClass(config.fullClassName(), sourceClassLoader);
     }
 
@@ -59,11 +52,8 @@ public class PojoFactory {
 
     private static List<Pojo> split(Pojo pojo) {
         List<Field> fields = pojo.getFields();
-        List<Pojo> pojoFields =
-                fields.stream()
-                        .filter(v -> v instanceof Pojo)
-                        .map(v -> (Pojo) v)
-                        .collect(Collectors.toList());
+        List<Pojo> pojoFields = fields.stream().filter(v -> v instanceof Pojo).map(v -> (Pojo) v)
+                                      .collect(Collectors.toList());
         List<Pojo> result = new ArrayList<>(pojoFields);
         for (Pojo pojoField : pojoFields) {
             result.addAll(split(pojoField));
@@ -77,7 +67,7 @@ public class PojoFactory {
         builder.packageName(config.getPackageName());
         builder.type(config.getPackageName() + "." + config.currentClassName());
         builder.name(name);
-        builder.field(basicField);
+        builder.schema(basicField);
         ObjectField objectField = (ObjectField) basicField;
         objectField.getProperties().forEach((k, v) -> builder.addField(buildField(k, v, config)));
         return builder.build();
@@ -89,16 +79,10 @@ public class PojoFactory {
             if (isPojoType(basicField)) {
                 return buildPojo(fieldName, basicField, config);
             } else {
-                return Field.newFieldBuilder()
-                        .name(fieldName)
-                        .field(basicField)
-                        .type(
-                                String.format(
-                                        "%s<%s,%s>",
-                                        Map.class.getName(),
-                                        String.class.getName(),
-                                        Object.class.getName()))
-                        .build();
+                return Field.newFieldBuilder().name(fieldName).schema(basicField)
+                            .type(String.format("%s<%s,%s>", Map.class.getName(), String.class.getName(),
+                                                Object.class.getName()
+                            )).build();
             }
         } else if (BasicType.ARRAY == type) {
             ArrayField arrayField = (ArrayField) basicField;
@@ -109,20 +93,14 @@ public class PojoFactory {
                 builder.addField(pojo);
                 return builder.build();
             } else {
-                return Field.newFieldBuilder()
-                        .name(fieldName)
-                        .field(basicField)
-                        .type(
-                                String.format(
-                                        "%s<%s>",
-                                        List.class.getName(),
-                                        getJavaType(arrayField.getItems().getType())))
-                        .build();
+                return Field.newFieldBuilder().name(fieldName).schema(basicField)
+                            .type(String.format("%s<%s>", List.class.getName(),
+                                                getJavaType(arrayField.getItems().getType())
+                            )).build();
             }
         } else {
-            Field.FieldBuilder builder = Field.newFieldBuilder().name(fieldName);
-            builder.type(getJavaType(basicField.getType()));
-            return builder.build();
+            return Field.newFieldBuilder().name(fieldName).schema(basicField).type(getJavaType(basicField.getType()))
+                        .build();
         }
     }
 
@@ -145,19 +123,12 @@ public class PojoFactory {
         if (basicField instanceof ObjectField) {
             ObjectField objectField = (ObjectField) basicField;
             boolean notEmptyProperties = ObjectUtils.isNotEmpty(objectField.getProperties());
-            boolean emptyPatternProperties =
-                    ObjectUtils.isEmpty(objectField.getPatternProperties());
-            boolean noAdditionalProperties =
-                    ObjectUtils.isEmpty(objectField.getAdditionalProperties());
+            boolean emptyPatternProperties = ObjectUtils.isEmpty(objectField.getPatternProperties());
+            boolean noAdditionalProperties = ObjectUtils.isEmpty(objectField.getAdditionalProperties());
             boolean emptyAllOf = ObjectUtils.isEmpty(objectField.getAllOf());
             boolean emptyAnyOf = ObjectUtils.isEmpty(objectField.getAnyOf());
             boolean emptyOneOf = ObjectUtils.isEmpty(objectField.getOneOf());
-            return notEmptyProperties
-                    && emptyPatternProperties
-                    && noAdditionalProperties
-                    && emptyAllOf
-                    && emptyAnyOf
-                    && emptyOneOf;
+            return notEmptyProperties && emptyPatternProperties && noAdditionalProperties && emptyAllOf && emptyAnyOf && emptyOneOf;
         } else if (basicField instanceof ArrayField) {
             ArrayField arrayField = (ArrayField) basicField;
             return arrayField.getItems() != null && isPojoType(arrayField.getItems());

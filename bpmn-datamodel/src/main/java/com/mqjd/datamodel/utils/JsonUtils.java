@@ -5,9 +5,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionLikeType;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JsonUtils {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -41,7 +44,7 @@ public class JsonUtils {
         }
     }
 
-    public static <T> T fromJson(String json, Class<T> clz) {
+    public static <T> T jsonToObject(String json, Class<T> clz) {
         try {
             return OBJECT_MAPPER.readValue(json, clz);
         } catch (IOException e) {
@@ -49,7 +52,16 @@ public class JsonUtils {
         }
     }
 
-    public static <T> T fromJson(InputStream inputStream, Class<T> clz) {
+    public static <T> List<T> jsonToList(String json, Class<T> clz) {
+        try {
+            CollectionLikeType type = OBJECT_MAPPER.getTypeFactory().constructCollectionLikeType(ArrayList.class, clz);
+            return OBJECT_MAPPER.readValue(json, type);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("write obj to string error", e);
+        }
+    }
+
+    public static <T> T jsonToObject(InputStream inputStream, Class<T> clz) {
         try {
             return OBJECT_MAPPER.readValue(inputStream, clz);
         } catch (IOException e) {

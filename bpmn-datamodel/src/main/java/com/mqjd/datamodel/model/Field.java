@@ -9,7 +9,7 @@ public class Field {
     private String name;
     private String type;
     private String fullType;
-    private BasicField field;
+    private BasicField schema;
     private List<String> imports;
 
     public String getName() {
@@ -48,12 +48,12 @@ public class Field {
         this.fullType = fullType;
     }
 
-    public BasicField getField() {
-        return field;
+    public BasicField getSchema() {
+        return schema;
     }
 
-    public void setField(BasicField field) {
-        this.field = field;
+    public void setSchema(BasicField schema) {
+        this.schema = schema;
     }
 
     public static FieldBuilder newFieldBuilder() {
@@ -64,7 +64,7 @@ public class Field {
         private String name;
         private String type;
         private String fullType;
-        private BasicField field;
+        private BasicField schema;
         private final List<String> imports = new ArrayList<>();
 
         public FieldBuilder name(String name) {
@@ -72,8 +72,8 @@ public class Field {
             return this;
         }
 
-        public FieldBuilder field(BasicField field) {
-            this.field = field;
+        public FieldBuilder schema(BasicField schema) {
+            this.schema = schema;
             return this;
         }
 
@@ -97,7 +97,7 @@ public class Field {
             field.setName(name);
             field.setType(type);
             field.setFullType(fullType);
-            field.setField(this.field);
+            field.setSchema(this.schema);
             field.setImports(imports);
             return field;
         }

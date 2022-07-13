@@ -11,7 +11,7 @@ public class ObjectFieldTest {
     @Test
     public void fromJson() {
         ObjectField objectField =
-                JsonUtils.fromJson(
+                JsonUtils.jsonToObject(
                         getClass().getResourceAsStream("/field/object1.json"), ObjectField.class);
         assertEquals("test_object", objectField.getTitle());
         System.out.println(JsonUtils.toJson(objectField));

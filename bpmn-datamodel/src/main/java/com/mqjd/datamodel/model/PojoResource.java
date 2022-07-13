@@ -1,5 +1,6 @@
 package com.mqjd.datamodel.model;
 
+import com.mqjd.datamodel.freemarker.function.CodeGenerateFunction;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.codehaus.commons.compiler.util.resource.Resource;
@@ -11,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PojoResource implements Resource {
     private static final Logger LOG = LoggerFactory.getLogger(PojoResource.class);
@@ -26,7 +29,10 @@ public class PojoResource implements Resource {
     public InputStream open() throws IOException {
         try {
             StringWriter stringWriter = new StringWriter();
-            template.process(pojo, stringWriter);
+            Map<Object, Object> param = new HashMap<>();
+            param.put("pojo", pojo);
+            param.put("codeGenerate", new CodeGenerateFunction());
+            template.process(param, stringWriter);
             String code = stringWriter.toString();
             return new ByteArrayInputStream(code.getBytes(StandardCharsets.UTF_8));
         } catch (TemplateException e) {
