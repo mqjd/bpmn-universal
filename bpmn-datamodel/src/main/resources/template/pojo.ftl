@@ -112,7 +112,7 @@ public class ${pojo.className} implements SchemaValidator {
         </#if>
         <#t> && <#t>
         <#if field.schema.pattern??>
-            Pattern.matches(field.schema.pattern, ${field.fieldName})<#else> true <#t>
+            Pattern.matches(${codeGenerate(field.schema.pattern)}, ${field.fieldName})<#else> true <#t>
         </#if>
     </#compress>
 </#macro>

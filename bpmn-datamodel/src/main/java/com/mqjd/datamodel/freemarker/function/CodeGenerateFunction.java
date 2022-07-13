@@ -1,11 +1,9 @@
 package com.mqjd.datamodel.freemarker.function;
 
 import com.mqjd.datamodel.utils.JsonUtils;
-import freemarker.ext.beans.StringModel;
 import freemarker.ext.util.WrapperTemplateModel;
-import freemarker.template.DefaultListAdapter;
-import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.TemplateMethodModelEx;
+import freemarker.template.TemplateScalarModel;
 import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.List;
@@ -16,6 +14,9 @@ public class CodeGenerateFunction implements TemplateMethodModelEx {
         Object param = arguments.get(0);
         if (param instanceof WrapperTemplateModel) {
             param = ((WrapperTemplateModel) param).getWrappedObject();
+        }
+        if (param instanceof TemplateScalarModel) {
+            return String.format("\"%s\"", StringEscapeUtils.escapeJava(arguments.get(0).toString()));
         }
         String json = JsonUtils.toJson(param);
         if (param instanceof List) {
