@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mqjd.validator.SchemaValidator;
 import com.mqjd.datamodel.utils.JsonUtils;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 <#list pojo.imports as import>
 import ${import};
@@ -18,7 +19,7 @@ public class ${pojo.className} implements SchemaValidator {
 
     <#list pojo.fields as fieldItem>
     @JsonProperty("${fieldItem.name}")
-    private ${fieldItem.type} ${fieldItem.fieldName};
+    public ${fieldItem.type} ${fieldItem.fieldName};
 
     </#list>
 
@@ -36,10 +37,50 @@ public class ${pojo.className} implements SchemaValidator {
 
     @JsonIgnore
     public boolean isValid() {
-        return isSchemaValid() &&<#list pojo.fields as itemField> is${itemField.fieldName}Valid()<#sep>
-        &&</#sep></#list>;
+        return isSchemaValid() && <@fieldsValid fields=pojo.fields/>;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
+        ${pojo.className} that = (${pojo.className}) o;
+        return <@equals fields=pojo.fields/>;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), <@hashCode fields=pojo.fields/>);
     }
 }
+
+<#macro fieldsValid fields>
+    <#compress>
+        <#list fields as itemField>
+            <#t>is${itemField.fieldName}Valid()<#sep> && </#sep>
+        </#list>
+    </#compress>
+</#macro>
+
+<#macro equals fields>
+    <#compress>
+        <#list fields as fieldItem>
+            <#t>Objects.equals(${fieldItem.fieldName}, that.${fieldItem.fieldName})<#sep> && </#sep>
+        </#list>
+    </#compress>
+</#macro>
+
+<#macro hashCode fields>
+    <#compress>
+        <#list fields as fieldItem>
+            <#t>${fieldItem.fieldName}<#sep>, </#sep>
+        </#list>
+    </#compress>
+</#macro>
 
 <#macro valid field>
     <#compress>
