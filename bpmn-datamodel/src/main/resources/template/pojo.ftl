@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mqjd.validator.SchemaValidator;
 import com.mqjd.datamodel.utils.JsonUtils;
 import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.regex.Pattern;
 <#list pojo.imports as import>
@@ -26,18 +27,22 @@ public class ${pojo.className} implements SchemaValidator {
     <#list pojo.fields as fieldItem>
     @JsonIgnore
     private boolean is${fieldItem.fieldName}Valid() {
-        return <@valid field=fieldItem/>;
+        if (${fieldItem.fieldName} != null) {
+            return <@valid field=fieldItem/>;
+        }
+        return true;
     }
 
     </#list>
+
     @JsonIgnore
-    public boolean isSchemaValid() {
-        return <@valid field=pojo/>;
+    private boolean isRequiredValid() {
+        return <@pojoRequiredValid field=pojo/>;
     }
 
     @JsonIgnore
     public boolean isValid() {
-        return isSchemaValid() && <@fieldsValid fields=pojo.fields/>;
+        return isRequiredValid() && <@fieldsValid fields=pojo.fields/>;
     }
 
     @Override
@@ -61,7 +66,7 @@ public class ${pojo.className} implements SchemaValidator {
 <#macro fieldsValid fields>
     <#compress>
         <#list fields as itemField>
-            <#t>is${itemField.fieldName}Valid()<#sep> && </#sep>
+             <#t>is${itemField.fieldName}Valid()<#sep> && </#sep>
         </#list>
     </#compress>
 </#macro>
@@ -69,7 +74,7 @@ public class ${pojo.className} implements SchemaValidator {
 <#macro equals fields>
     <#compress>
         <#list fields as fieldItem>
-            <#t>Objects.equals(${fieldItem.fieldName}, that.${fieldItem.fieldName})<#sep> && </#sep>
+             <#t>Objects.equals(${fieldItem.fieldName}, that.${fieldItem.fieldName})<#sep> && </#sep>
         </#list>
     </#compress>
 </#macro>
@@ -77,47 +82,120 @@ public class ${pojo.className} implements SchemaValidator {
 <#macro hashCode fields>
     <#compress>
         <#list fields as fieldItem>
-            <#t>${fieldItem.fieldName}<#sep>, </#sep>
+             <#t>${fieldItem.fieldName}<#sep>, </#sep>
         </#list>
     </#compress>
 </#macro>
 
 <#macro valid field>
     <#compress>
+        true  <#t>
         <#switch field.schema.type>
           <#case "OBJECT">
              <@validObject field=field/>
              <#break>
+          <#case "ARRAY">
+             <@validArray field=field/>
+             <#break>
           <#case "STRING">
              <@validString field=field/>
              <#break>
+          <#case "INTEGER">
+             <@validInteger field=field/>
+             <#break>
+          <#case "NUMBER">
+             <@validNumber field=field/>
+             <#break>
           <#default>
-            true
+            && true
         </#switch>
+    </#compress>
+</#macro>
+
+<#macro validObject field>
+    && ${field.fieldName}.isValid()
+</#macro>
+
+<#macro validArray field>
+    <#compress>
+        <#if field.schema.minItems??>
+            && ${field.fieldName}.size() >= ${field.schema.minItems} <#t>
+        </#if>
+        <#if field.schema.maxItems??>
+            && ${field.fieldName}.size() <= ${field.schema.maxItems} <#t>
+        </#if>
+        <#if field.schema.uniqueItems??>
+            <#if field.schema.uniqueItems>
+                && ${field.fieldName}.size() == new HashSet<>(${field.fieldName}).size()
+            </#if>
+        </#if>
     </#compress>
 </#macro>
 
 <#macro validString field>
     <#compress>
         <#if field.schema.minLength??>
-            ${field.fieldName}.length() >= ${field.schema.minLength}<#else> true <#t>
+            && ${field.fieldName}.length() >= ${field.schema.minLength} <#t>
         </#if>
-        <#t> && <#t>
         <#if field.schema.maxLength??>
-            ${field.fieldName}.length() <= ${field.schema.maxLength}<#else> true <#t>
+            && ${field.fieldName}.length() <= ${field.schema.maxLength} <#t>
         </#if>
-        <#t> && <#t>
         <#if field.schema.enums??>
-            ${field.fieldName}$enums.contains(${field.fieldName})<#else> true <#t>
+            && ${field.fieldName}$enums.contains(${field.fieldName}) <#t>
         </#if>
-        <#t> && <#t>
         <#if field.schema.pattern??>
-            Pattern.matches(${codeGenerate(field.schema.pattern)}, ${field.fieldName})<#else> true <#t>
+            && Pattern.matches(${codeGenerate(field.schema.pattern)}, ${field.fieldName})
         </#if>
     </#compress>
 </#macro>
 
-<#macro validObject field>
+<#macro validInteger field>
+    <#compress>
+        <#if field.schema.minimum??>
+            && ${field.fieldName} >= ${field.schema.minimum}L <#t>
+        </#if>
+        <#if field.schema.maximum??>
+            && ${field.fieldName} <= ${field.schema.maximum}L <#t>
+        </#if>
+        <#if field.schema.exclusiveMinimum??>
+            && ${field.fieldName} > ${field.schema.exclusiveMinimum}L <#t>
+        </#if>
+        <#if field.schema.exclusiveMaximum??>
+            && ${field.fieldName} <= ${field.schema.exclusiveMaximum}L <#t>
+        </#if>
+        <#if field.schema.multipleOf??>
+            && ${field.fieldName} % ${field.schema.multipleOf}L == 0 <#t>
+        </#if>
+        <#if field.schema.enums??>
+            && ${field.fieldName}$enums.contains(${field.fieldName})
+        </#if>
+    </#compress>
+</#macro>
+
+<#macro validNumber field>
+    <#compress>
+        <#if field.schema.minimum??>
+            && ${field.fieldName} >= ${field.schema.minimum}D <#t>
+        </#if>
+        <#if field.schema.maximum??>
+            && ${field.fieldName} <= ${field.schema.maximum}D <#t>
+        </#if>
+        <#if field.schema.exclusiveMinimum??>
+            && ${field.fieldName} > ${field.schema.exclusiveMinimum}D <#t>
+        </#if>
+        <#if field.schema.exclusiveMaximum??>
+            && ${field.fieldName} <= ${field.schema.exclusiveMaximum}D <#t>
+        </#if>
+        <#if field.schema.multipleOf??>
+            && ${field.fieldName} % ${field.schema.multipleOf}D == 0 <#t>
+        </#if>
+        <#if field.schema.enums??>
+            && ${field.fieldName}$enums.contains(${field.fieldName})
+        </#if>
+    </#compress>
+</#macro>
+
+<#macro pojoRequiredValid field>
     <#if field.schema.required??>
         <#list field.schema.required as requiredField>
             <#lt>$${requiredField} != null<#sep> &&</#sep> <#else>true

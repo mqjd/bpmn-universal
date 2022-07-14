@@ -1,12 +1,12 @@
 package com.mqjd.datamodel.field.array;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonTypeResolver;
 import com.mqjd.datamodel.field.BasicField;
 import com.mqjd.datamodel.field.BasicType;
-
-import java.util.Arrays;
-import java.util.Objects;
 
 public class ArrayField extends BasicField {
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
@@ -93,32 +93,25 @@ public class ArrayField extends BasicField {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ArrayField)) return false;
-        if (!super.equals(o)) return false;
-        ArrayField that = (ArrayField) o;
-        return Objects.equals(getItems(), that.getItems())
-                && Objects.equals(getContains(), that.getContains())
-                && Objects.equals(getMinContains(), that.getMinContains())
-                && Objects.equals(getMaxContains(), that.getMaxContains())
-                && Objects.equals(getMinItems(), that.getMinItems())
-                && Objects.equals(getMaxItems(), that.getMaxItems())
-                && Objects.equals(getUniqueItems(), that.getUniqueItems())
-                && Arrays.equals(getPrefixItems(), that.getPrefixItems());
+        if (this == o)
+            return true;
+        if (!(o instanceof ArrayField))
+            return false;
+        if (!super.equals(o))
+            return false;
+        ArrayField that = (ArrayField)o;
+        return Objects.equals(getItems(), that.getItems()) && Objects.equals(getContains(), that.getContains())
+            && Objects.equals(getMinContains(), that.getMinContains())
+            && Objects.equals(getMaxContains(), that.getMaxContains())
+            && Objects.equals(getMinItems(), that.getMinItems()) && Objects.equals(getMaxItems(), that.getMaxItems())
+            && Objects.equals(getUniqueItems(), that.getUniqueItems())
+            && Arrays.equals(getPrefixItems(), that.getPrefixItems());
     }
 
     @Override
     public int hashCode() {
-        int result =
-                Objects.hash(
-                        super.hashCode(),
-                        getItems(),
-                        getContains(),
-                        getMinContains(),
-                        getMaxContains(),
-                        getMinItems(),
-                        getMaxItems(),
-                        getUniqueItems());
+        int result = Objects.hash(super.hashCode(), getItems(), getContains(), getMinContains(), getMaxContains(),
+            getMinItems(), getMaxItems(), getUniqueItems());
         result = 31 * result + Arrays.hashCode(getPrefixItems());
         return result;
     }

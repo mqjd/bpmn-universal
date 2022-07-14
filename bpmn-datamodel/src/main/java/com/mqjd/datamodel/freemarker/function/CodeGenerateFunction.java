@@ -19,7 +19,7 @@ public class CodeGenerateFunction implements TemplateMethodModelEx {
             return String.format("\"%s\"", StringEscapeUtils.escapeJava(arguments.get(0).toString()));
         }
         String json = JsonUtils.toJson(param);
-        if (param instanceof List) {
+        if (param instanceof List || param.getClass().isArray()) {
             return String.format("JsonUtils.jsonToList(\"%s\", %s.class)", StringEscapeUtils.escapeJava(json),
                                  arguments.get(1).toString()
             );

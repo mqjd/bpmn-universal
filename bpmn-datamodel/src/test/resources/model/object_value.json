@@ -1,0 +1,14 @@
+{
+  "string_field": "1",
+  "integer_field": 4,
+  "number_field": 4.4,
+  "array_field": [
+    2.2,
+    4.4,
+    6.6
+  ],
+  "object_field": {
+    "string_field1": "1",
+    "integer_field1": 4
+  }
+}
