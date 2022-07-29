@@ -8,9 +8,9 @@ import freemarker.template.TemplateModel;
 import java.util.Map;
 
 public class JsonDirective implements TemplateDirectiveModel {
-    @Override
-    public void execute(Environment environment, Map map, TemplateModel[] templateModels,
-                        TemplateDirectiveBody templateDirectiveBody) {
+	@Override
+	public void execute(Environment environment, Map map, TemplateModel[] templateModels,
+			TemplateDirectiveBody templateDirectiveBody) {
 
-    }
+	}
 }
